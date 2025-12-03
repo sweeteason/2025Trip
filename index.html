@@ -63,7 +63,6 @@
         }
     </script>
     <style>
-        /* 關鍵修正：定義 iPhone 底部安全區域 */
         .pb-safe {
             padding-bottom: env(safe-area-inset-bottom);
         }
@@ -75,7 +74,6 @@
             background-size: 50px 50px;
             color: #5E4B35;
             -webkit-tap-highlight-color: transparent;
-            /* 修正：Body 不需要 hidden，讓瀏覽器自然捲動 */
             min-height: 100vh;
         }
 
@@ -109,7 +107,6 @@
         .tab-content {
             display: none;
             animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            /* 修正：底部 padding 加大，避免被 Fixed 導覽列擋住 */
             padding-bottom: 140px;
         }
 
@@ -520,12 +517,14 @@
 
     <script>
         // --- Enhanced Data ---
+        // 新增了 weather 欄位到每一天的資料中
         const itineraryData = [
             {
                 date: "12/20",
                 day: "六",
                 title: "出發！前進雪國 ✈️",
                 active: true,
+                weather: { icon: "fa-snowflake", temp: "-2°C", desc: "大雪" }, // 新增
                 events: [
                     {
                         time: "09:10",
@@ -572,6 +571,7 @@
                 day: "日",
                 title: "札幌市區巡禮 ⛩️",
                 active: false,
+                weather: { icon: "fa-cloud-meatball", temp: "-3°C", desc: "多雲雪" }, // 新增
                 events: [
                     {
                         time: "08:30",
@@ -605,6 +605,7 @@
                 day: "一",
                 title: "登別洞爺一日遊 🚌",
                 active: false,
+                weather: { icon: "fa-cloud-sun", temp: "-1°C", desc: "晴時雲" }, // 新增
                 events: [
                     {
                         time: "07:40",
@@ -626,6 +627,7 @@
                 day: "二",
                 title: "旭川美瑛夢幻遊 🐧",
                 active: false,
+                weather: { icon: "fa-snowflake", temp: "-6°C", desc: "大雪" }, // 新增 (旭川通常較冷)
                 events: [
                     {
                         time: "07:50",
@@ -647,6 +649,7 @@
                 day: "三",
                 title: "白色聖誕夜 🎄",
                 active: false,
+                weather: { icon: "fa-snowflake", temp: "-2°C", desc: "飄雪" }, // 新增
                 events: [
                     { time: "08:30", desc: "羊之丘展望台 🐑", type: "activity", details: "免費體驗玩雪 (滑步車、做雪人)。必拍克拉克博士像。" },
                     { time: "12:00", desc: "拉麵橫丁午餐", type: "food", details: "推薦：弟子屈拉麵 (魚介)、倍煎舍 (味噌)。" },
@@ -668,6 +671,7 @@
                 day: "四",
                 title: "小樽浪漫漫步 🕯️",
                 active: false,
+                weather: { icon: "fa-cloud", temp: "-3°C", desc: "陰天" }, // 新增
                 events: [
                     { time: "09:10", desc: "前往小樽", type: "transport", details: "搭乘 JR 快速 Airport 號 (坐右邊看海)。" },
                     { time: "10:00", desc: "小樽運河 & 商店街", type: "walk", details: "北菓樓泡芙、LeTAO 蛋糕、六花亭、音樂盒堂。" },
@@ -681,6 +685,7 @@
                 day: "五",
                 title: "再見北海道 👋",
                 active: false,
+                weather: { icon: "fa-sun", temp: "-1°C", desc: "晴天" }, // 新增
                 events: [
                     {
                         time: "08:30",
@@ -741,10 +746,7 @@
         ];
 
         // --- Logic ---
-        // 支出紀錄維持原本的 (不變)
         let expenses = JSON.parse(localStorage.getItem('expenses_book_2025')) || [];
-
-        // 修改：清單改用 v2 版本，確保會載入新的預設值
         let todoList = JSON.parse(localStorage.getItem('todo_book_2025_v2')) || [
             // --- 證件與網卡 ---
             { text: "護照 (效期6個月以上) 📕", done: false },
@@ -793,7 +795,7 @@
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
 
-            // 修正：切換 tab 時滾動到頂部
+            // 切換 tab 時滾動到頂部
             window.scrollTo(0, 0);
         }
 
@@ -825,11 +827,22 @@
             const container = document.getElementById('itinerary-container');
 
             let html = `<div class="timeline-line"></div>`;
+
+            // 修改：加入天氣小卡
             html += `
                     <div class="mb-8 ml-10 relative">
-                        <h3 class="text-xl font-black text-sketch-ink bg-sketch-warm inline-block px-4 py-2 sketch-box transform -rotate-1">
-                            ${dayData.title}
-                        </h3>
+                         <div class="flex justify-between items-end pr-4 mb-2">
+                            <h3 class="text-xl font-black text-sketch-ink bg-sketch-warm inline-block px-4 py-2 sketch-box transform -rotate-1">
+                                ${dayData.title}
+                            </h3>
+                            <div class="flex items-center gap-2 bg-white/80 border border-sketch-ink px-3 py-1 rounded-full shadow-sm transform rotate-1">
+                                <i class="fas ${dayData.weather.icon} text-blue-400 text-lg"></i>
+                                <div class="text-right leading-tight">
+                                    <div class="text-xs font-black text-sketch-ink">${dayData.weather.desc}</div>
+                                    <div class="text-[10px] font-bold text-gray-500">${dayData.weather.temp}</div>
+                                </div>
+                            </div>
+                         </div>
                     </div>
                 `;
 
@@ -1033,7 +1046,7 @@
         function toggleTodo(index) { todoList[index].done = !todoList[index].done; saveTodo(); }
         function addTodo() { const input = document.getElementById('new-todo'); const text = input.value.trim(); if (text) { todoList.push({ text: text, done: false }); saveTodo(); input.value = ''; } }
         function removeTodo(index) { todoList.splice(index, 1); saveTodo(); }
-        function saveTodo() { localStorage.setItem('todo_book_2025', JSON.stringify(todoList)); renderTodoList(); }
+        function saveTodo() { localStorage.setItem('todo_book_2025_v2', JSON.stringify(todoList)); renderTodoList(); }
 
         function showImage(src) {
             const overlay = document.createElement('div');
@@ -1043,5 +1056,6 @@
             document.body.appendChild(overlay);
         }
     </script>
+    <script async id="netlify-rum-container" src="/.netlify/scripts/rum" data-netlify-rum-site-id="8003cbaf-be09-421b-b701-0774be002038" data-netlify-deploy-branch="" data-netlify-deploy-context="production" data-netlify-cwv-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaXRlX2lkIjoiODAwM2NiYWYtYmUwOS00MjFiLWI3MDEtMDc3NGJlMDAyMDM4IiwiYWNjb3VudF9pZCI6IjY5MjQxMmFmYmM2NjQ5ZTZkOGQ5ZjdiZiIsImRlcGxveV9pZCI6IjY5MmMzNGEzYzJhZWEyNDAzNTZhMGFhOCIsImlzc3VlciI6Im5mc2VydmVyIn0.UhAsomSKHNugC7L5rmD9_eew9li4gC5vSL6bxT6_lLs"></script>
 </body>
 </html>
