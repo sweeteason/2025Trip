@@ -677,14 +677,35 @@
         ];
 
         // --- Logic ---
+        // 支出紀錄維持原本的 (不變)
         let expenses = JSON.parse(localStorage.getItem('expenses_book_2025')) || [];
-        let todoList = JSON.parse(localStorage.getItem('todo_book_2025')) || [
+
+        // 修改：清單改用 v2 版本，確保會載入新的預設值
+        let todoList = JSON.parse(localStorage.getItem('todo_book_2025_v2')) || [
+            // --- 證件與網卡 ---
             { text: "護照 (效期6個月以上) 📕", done: false },
-            { text: "Visit Japan Web 截圖 📱", done: false },
-            { text: "eSIM 設定完成 📶", done: false },
-            { text: "日幣現金 & 信用卡 💴", done: false },
-            { text: "旅遊保險單 📄", done: false },
-            { text: "防滑雪靴 & 手套 🧤", done: false }
+            { text: "Visit Japan Web (截圖備用) 📱", done: false },
+            { text: "旅遊保險 (平安險+不便險) 📄", done: false },
+            { text: "eSIM / 漫遊設定完成 📶", done: false },
+
+            // --- 錢與交通 ---
+            { text: "日幣現金 & 信用卡 (JCB/Visa) 💴", done: false },
+            { text: "交通卡 (Suica/ICOCA) 🐧", done: false },
+
+            // --- 衣物與裝備 ---
+            { text: "防滑雪靴 & 防水手套 🧤", done: false },
+            { text: "防寒衣物 (發熱衣/毛帽/圍巾) 🧣", done: false },
+            { text: "個人盥洗 (牙刷/牙膏) 🪥", done: false },
+
+            // --- 電子與藥品 ---
+            { text: "充電器 & 行動電源 (低溫耗電快) 🔋", done: false },
+            { text: "常備藥 (感冒/暈車/外傷/止痛) 💊", done: false },
+
+            // --- 貼心補充 (北海道冬季必備) ---
+            { text: "鞋底簡易冰爪 (市區路超滑!) ❄️", done: false },
+            { text: "暖暖包 (貼式/手握) 🔥", done: false },
+            { text: "護唇膏 & 高保濕乳液 (極乾) 🧴", done: false },
+            { text: "太陽眼鏡 (雪地反光刺眼) 🕶️", done: false }
         ];
 
         window.onload = function () {
