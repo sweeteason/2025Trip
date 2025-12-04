@@ -255,6 +255,16 @@
                     </label>
                 </div>
                 
+                <div class="mt-2 flex items-center justify-end gap-2 pr-1">
+                    <label class="flex items-center gap-2 cursor-pointer select-none group">
+                        <input type="checkbox" id="expense-is-advance" class="peer hidden">
+                        <div class="w-4 h-4 rounded border-2 border-gray-300 peer-checked:bg-kawaii-secondary peer-checked:border-kawaii-secondary flex items-center justify-center transition-all bg-white group-active:scale-95">
+                            <i class="fas fa-check text-white text-[10px] opacity-0 peer-checked:opacity-100"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-400 peer-checked:text-kawaii-secondary transition-colors">幫別人代墊 (事後算)</span>
+                    </label>
+                </div>
+                
                 <div id="photo-preview-container" class="hidden mt-3 relative w-full h-32 bg-gray-100 rounded-xl overflow-hidden border-2 border-white shadow-sm">
                     <img id="photo-preview" class="w-full h-full object-contain">
                     <button onclick="clearPhoto()" class="absolute top-2 right-2 bg-red-400 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold shadow-md">×</button>
@@ -419,6 +429,7 @@
                     { time: "09:10", desc: "桃園機場 (T1)", type: "transport", note: "提早3hr!", highlight: true, details: "09:10前抵達。酷航櫃台人多，請提早。填寫 Visit Japan Web。" },
                     { time: "12:10", desc: "酷航 TR892", type: "transport", details: "12:10 起飛 -> 17:20 抵達新千歲 (CTS)。" },
                     { time: "17:50", desc: "抵達新千歲", type: "transport", details: "搭乘 JR 快速 Airport (¥1,150) 前往札幌。" },
+                    // 修改：更名為「旅館 Check-in」
                     { time: "19:00", desc: "旅館 Check-in", type: "stay", mapLink: "https://www.google.com/maps/search/?api=1&query=Hotel+Vista+Sapporo+Odori", details: "Hotel Vista Sapporo Odori。狸小路商店街附近。" },
                     { time: "19:30", desc: "湯咖哩 Suage+", type: "food", note: "必吃!", details: "推薦：串燒湯咖哩。飯泡湯吃。" },
                     { time: "20:30", desc: "夜間聖代", type: "activity", details: "推薦：ななかま堂。之後逛唐吉軻德。" }
@@ -501,7 +512,8 @@
             { title: "精靈露台", content: "富良野森林裡的小木屋，點燈後像精靈居住的夢幻國度。", tags: ["夢幻", "手作"] }
         ];
 
-        let expenses = JSON.parse(localStorage.getItem('expenses_book_2025_v6')) || [];
+        // 升級版本號到 v8
+        let expenses = JSON.parse(localStorage.getItem('expenses_book_2025_v8')) || [];
         
         let todoList = JSON.parse(localStorage.getItem('todo_book_2025_v7')) || [
             { text: "護照 (效期6個月以上) 📕", done: false },
@@ -672,7 +684,6 @@
                 if (/^[0-9+\-*/().\s]+$/.test(input)) {
                     const jpy = new Function('return ' + input)();
                     if (isFinite(jpy)) {
-                        // 修正：計算台幣時四捨五入到整數，避免小數點讓版面混亂 (300*0.201 = 60.3 -> 60)
                         document.getElementById('calc-result-jpy').innerText = Math.round(jpy);
                         document.getElementById('calc-result-twd').innerText = Math.round(jpy * rate).toLocaleString();
                     }
@@ -713,12 +724,31 @@
             const item = document.getElementById('expense-item').value;
             const amountStr = document.getElementById('calc-result-jpy').innerText;
             const amount = parseInt(amountStr) || 0;
+            // 獲取是否代墊的狀態
+            const isAdvance = document.getElementById('expense-is-advance').checked;
+
             if (!item || amount <= 0) { alert("請輸入項目和金額喔！🥺"); return; }
-            expenses.unshift({ id: Date.now(), item: item, amount: amount, image: currentPhotoBase64, date: new Date().toLocaleDateString() });
-            localStorage.setItem('expenses_book_2025_v6', JSON.stringify(expenses));
+            
+            // 將 isAdvance 屬性存入資料
+            expenses.unshift({ 
+                id: Date.now(), 
+                item: item, 
+                amount: amount, 
+                image: currentPhotoBase64, 
+                date: new Date().toLocaleDateString(),
+                isAdvance: isAdvance 
+            });
+            
+            localStorage.setItem('expenses_book_2025_v8', JSON.stringify(expenses));
             renderExpenses();
-            document.getElementById('expense-item').value = ""; document.getElementById('calc-input').value = "";
-            document.getElementById('calc-result-jpy').innerText = "0"; document.getElementById('calc-result-twd').innerText = "0"; clearPhoto();
+            
+            // 重置表單
+            document.getElementById('expense-item').value = ""; 
+            document.getElementById('calc-input').value = "";
+            document.getElementById('calc-result-jpy').innerText = "0"; 
+            document.getElementById('calc-result-twd').innerText = "0"; 
+            document.getElementById('expense-is-advance').checked = false; // 重置勾選
+            clearPhoto();
         }
 
         function renderExpenses() {
@@ -726,17 +756,22 @@
             const totalEl = document.getElementById('total-jpy');
             list.innerHTML = '';
             let total = 0; const rate = parseFloat(document.getElementById('exchange-rate').value) || 0.201;
+            
             expenses.forEach((ex, index) => {
                 total += ex.amount;
                 const li = document.createElement('li');
                 li.className = "bg-white p-3 rounded-2xl flex items-center gap-3 shadow-card border border-gray-50";
+                
+                // 渲染代墊標籤邏輯
+                const advanceTag = ex.isAdvance ? `<span class="bg-kawaii-secondary/20 text-kawaii-secondary text-[10px] px-1.5 py-0.5 rounded-md mr-1 font-black">[代墊]</span>` : '';
+
                 li.innerHTML = `
                     <div class="w-10 h-10 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center">
                         ${ex.image ? `<img src="${ex.image}" class="w-full h-full object-cover">` : `<i class="fas fa-shopping-basket text-gray-300"></i>`}
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex justify-between items-baseline">
-                            <h4 class="text-sm font-bold text-gray-700 truncate">${ex.item}</h4>
+                            <h4 class="text-sm font-bold text-gray-700 truncate">${advanceTag}${ex.item}</h4>
                             <span class="font-black text-sm text-kawaii-text">¥${ex.amount.toLocaleString()}</span>
                         </div>
                         <div class="text-[10px] text-gray-400 mt-1">${ex.date}</div>
@@ -747,8 +782,8 @@
             });
             totalEl.innerText = total.toLocaleString();
         }
-        function deleteExpense(index) { if (confirm("要刪除這筆紀錄嗎？")) { expenses.splice(index, 1); localStorage.setItem('expenses_book_2025_v6', JSON.stringify(expenses)); renderExpenses(); } }
-        function clearExpenses() { if (confirm("確定要清空所有紀錄嗎？")) { expenses = []; localStorage.setItem('expenses_book_2025_v6', JSON.stringify(expenses)); renderExpenses(); } }
+        function deleteExpense(index) { if (confirm("要刪除這筆紀錄嗎？")) { expenses.splice(index, 1); localStorage.setItem('expenses_book_2025_v8', JSON.stringify(expenses)); renderExpenses(); } }
+        function clearExpenses() { if (confirm("確定要清空所有紀錄嗎？")) { expenses = []; localStorage.setItem('expenses_book_2025_v8', JSON.stringify(expenses)); renderExpenses(); } }
 
         function renderTodoList() {
             const container = document.getElementById('checklist-container');
