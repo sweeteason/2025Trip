@@ -209,8 +209,7 @@
                 <div class="relative z-10">
                     <label class="text-xs font-bold text-gray-400 mb-1 block tracking-wider">EXCHANGE RATE</label>
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="text-2xl font-black text-kawaii-primary">0.</span>
-                        <input type="number" id="exchange-rate" value="201" class="w-24 text-2xl font-black bg-transparent border-b-2 border-kawaii-primary/30 focus:border-kawaii-primary focus:outline-none text-kawaii-text" placeholder="201">
+                        <input type="number" id="exchange-rate" value="0.201" step="0.001" class="w-32 text-2xl font-black bg-transparent border-b-2 border-kawaii-primary/30 focus:border-kawaii-primary focus:outline-none text-kawaii-text" placeholder="0.201">
                     </div>
                 </div>
 
@@ -219,7 +218,7 @@
                     <div class="flex justify-between items-end border-t border-dashed border-gray-200 pt-2">
                         <span class="text-xs text-gray-400 font-bold">JPY</span>
                         <div class="text-right">
-                            <span class="text-xs text-gray-400 font-bold mr-1">TWD</span>
+                            <span class="text-xs text-gray-400 font-bold mr-1">約 TWD</span>
                             <span id="calc-result-twd" class="text-lg font-bold text-kawaii-secondary">0</span>
                         </div>
                     </div>
@@ -503,12 +502,19 @@
         ];
 
         let expenses = JSON.parse(localStorage.getItem('expenses_book_2025_v6')) || [];
-        let todoList = JSON.parse(localStorage.getItem('todo_book_2025_v6')) || [
-            { text: "護照 (效期6個月以上)", done: false },
-            { text: "Visit Japan Web 截圖", done: false },
-            { text: "日幣現金 & 信用卡", done: false },
-            { text: "eSIM / 漫遊設定", done: false },
-            { text: "防滑雪靴 & 手套", done: false }
+        
+        let todoList = JSON.parse(localStorage.getItem('todo_book_2025_v7')) || [
+            { text: "護照 (效期6個月以上) 📕", done: false },
+            { text: "Visit Japan Web (截圖備用) 📱", done: false },
+            { text: "旅遊保險 (平安險+不便險) 📄", done: false },
+            { text: "eSIM / 漫遊設定完成 📶", done: false },
+            { text: "日幣現金 & 信用卡 (JCB/Visa) 💴", done: false },
+            { text: "交通卡 (Suica/ICOCA) 🐧", done: false },
+            { text: "防滑雪靴 & 防水手套 🧤", done: false },
+            { text: "防寒衣物 (發熱衣/毛帽/圍巾) 🧣", done: false },
+            { text: "個人盥洗 (牙刷/牙膏) 🪥", done: false },
+            { text: "充電器 & 行動電源 (低溫耗電快) 🔋", done: false },
+            { text: "常備藥 (感冒/暈車/外傷/止痛) 💊", done: false }
         ];
 
         window.onload = function () {
@@ -666,6 +672,7 @@
                 if (/^[0-9+\-*/().\s]+$/.test(input)) {
                     const jpy = new Function('return ' + input)();
                     if (isFinite(jpy)) {
+                        // 修正：計算台幣時四捨五入到整數，避免小數點讓版面混亂 (300*0.201 = 60.3 -> 60)
                         document.getElementById('calc-result-jpy').innerText = Math.round(jpy);
                         document.getElementById('calc-result-twd').innerText = Math.round(jpy * rate).toLocaleString();
                     }
@@ -763,7 +770,7 @@
         function toggleTodo(index) { todoList[index].done = !todoList[index].done; saveTodo(); }
         function addTodo() { const input = document.getElementById('new-todo'); const text = input.value.trim(); if (text) { todoList.push({ text: text, done: false }); saveTodo(); input.value = ''; } }
         function removeTodo(index) { todoList.splice(index, 1); saveTodo(); }
-        function saveTodo() { localStorage.setItem('todo_book_2025_v6', JSON.stringify(todoList)); renderTodoList(); }
+        function saveTodo() { localStorage.setItem('todo_book_2025_v7', JSON.stringify(todoList)); renderTodoList(); }
     </script>
 </body>
 </html>
