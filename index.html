@@ -6,12 +6,12 @@
     <title>2025 北海道冬の旅手帳 ❄️</title>
 
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#F8FAFC">
+    <meta name="theme-color" content="#FDFBF7">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -19,331 +19,278 @@
             theme: {
                 extend: {
                     colors: {
-                        app: {
-                            bg: '#F8FAFC',        // 專業感的冷灰白背景
-                            text: '#1E293B',      // 深岩灰文字 (高對比)
-                            subtext: '#64748B',   // 次要文字 (Slate-500)
-                            primary: '#0284C7',   // 專業藍 (Sky-600)
-                            secondary: '#38BDF8', // 明亮藍 (Sky-400)
-                            accent: '#F59E0B',    // 質感黃 (Amber-500)
-                            success: '#10B981',   // 成功綠
-                            danger: '#EF4444',    // 警示紅
-                            card: '#FFFFFF',
+                        kawaii: {
+                            base: '#FDFBF7', text: '#4A4036', primary: '#FF9EAA', secondary: '#89CFF0',
+                            accent: '#FFD54F', green: '#A7D7C5', purple: '#D4C1EC', card: '#FFFFFF'
                         }
                     },
-                    fontFamily: {
-                        sans: ['"Noto Sans TC"', 'sans-serif'], // 改用思源黑體
-                    },
+                    fontFamily: { sans: ['"Zen Maru Gothic"', 'sans-serif'] },
                     boxShadow: {
-                        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
-                        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-                        'float': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                        'nav': '0 -4px 20px rgba(0,0,0,0.05)'
+                        'soft': '0 4px 20px -2px rgba(255, 158, 170, 0.15)',
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'glow': '0 0 15px rgba(255, 158, 170, 0.5)' 
                     },
-                    animation: { 'fade-in': 'fadeIn 0.3s ease-out' },
-                    keyframes: { fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } } }
+                    animation: { 'bounce-slow': 'bounce 3s infinite' }
                 }
             }
         }
     </script>
     <style>
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-        body { 
-            background-color: #F8FAFC; 
-            color: #1E293B; 
-            -webkit-tap-highlight-color: transparent; 
-            min-height: 100vh;
-        }
-        
-        /* 優化滾動條 */
+        body { background-color: #FDFBF7; background-image: radial-gradient(#E5E5E5 1px, transparent 1px); background-size: 20px 20px; color: #4A4036; -webkit-tap-highlight-color: transparent; min-height: 100vh; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .tab-content { display: none; opacity: 0; animation: fadeIn 0.3s forwards; padding-bottom: 140px; }
-        .tab-content.active { display: block; }
-
-        /* 卡片樣式專業化：減少圓角，增加層次 */
-        .app-card {
-            background: white;
-            border-radius: 16px; /* 從 24px 改為 16px，更俐落 */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            border: 1px solid #E2E8F0; /* 增加極細邊框提升質感 */
-            transition: transform 0.1s, box-shadow 0.1s;
-            position: relative;
-            overflow: hidden;
-        }
-        .app-card:active { transform: scale(0.99); }
-
-        /* 時間軸線條 */
-        .timeline-line {
-            position: absolute;
-            left: 24px;
-            top: 40px;
-            bottom: 0;
-            width: 2px;
-            background: #E2E8F0; /* 實線取代虛線，更簡潔 */
-            z-index: 0;
-        }
-
-        .event-details { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, opacity 0.3s ease; opacity: 0; }
-        .expanded .event-details { max-height: 1000px; opacity: 1; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #E2E8F0; }
-        
-        /* 底部導航欄專業化 */
-        .nav-bar-float {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid #E2E8F0; /* 明顯的頂部線條 */
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.03);
-        }
-        
-        .nav-item { color: #94A3B8; } /* 預設顏色加深 (Slate-400) */
-        .nav-item.active { color: #0284C7; } /* 選中顏色 (Primary Blue) */
-        .nav-item.active .icon-container {
-            transform: translateY(-5px);
-            color: #0284C7;
-        }
-        
-        /* 雪花特效 (保留但變淡) */
-        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.6; }
-        .snowflake { position: absolute; color: #BAE6FD; font-size: 1rem; animation: snow 15s linear infinite; }
-        @keyframes snow { 0% { transform: translateY(-10px) translateX(0) rotate(0deg); opacity: 0; } 100% { transform: translateY(100vh) translateX(20px) rotate(360deg); opacity: 0; } }
+        .tab-content { display: none; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; padding-bottom: 140px; }
+        .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
+        .kawaii-card { background: white; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 2px solid #F0F0F0; transition: transform 0.2s; position: relative; overflow: hidden; }
+        .timeline-line { position: absolute; left: 28px; top: 40px; bottom: 0; width: 4px; background: repeating-linear-gradient(to bottom, #E3F2FD 0, #E3F2FD 10px, transparent 10px, transparent 20px); z-index: 0; border-radius: 4px; }
+        .event-details { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), opacity 0.4s ease; opacity: 0; }
+        .expanded .event-details { max-height: 1000px; opacity: 1; margin-top: 1rem; padding-top: 1rem; border-top: 2px dashed #F0F0F0; }
+        .nav-bar-float { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 30px 30px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.05); border-top: 1px solid rgba(255,255,255,0.8); }
+        .nav-item.active .icon-container { background-color: #FF9EAA; color: white; transform: translateY(-10px) scale(1.1); box-shadow: 0 6px 15px rgba(255, 158, 170, 0.4); }
+        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .snowflake { position: absolute; color: #BDE0FE; font-size: 1rem; text-shadow: 0 0 5px rgba(255,255,255,0.8); animation: snow 15s linear infinite; }
+        @keyframes snow { 0% { transform: translateY(-10px) translateX(0) rotate(0deg); opacity: 0; } 20% { opacity: 0.8; } 100% { transform: translateY(100vh) translateX(20px) rotate(360deg); opacity: 0.2; } }
     </style>
 </head>
-<body class="font-sans flex flex-col relative text-app-text selection:bg-app-primary selection:text-white">
+<body class="font-sans flex flex-col relative text-kawaii-text selection:bg-kawaii-primary selection:text-white">
 
     <div class="snow-container">
         <div class="snowflake" style="left: 10%; animation-delay: 0s;">❄</div>
+        <div class="snowflake" style="left: 25%; animation-delay: 2s; font-size: 0.8rem;">❅</div>
         <div class="snowflake" style="left: 50%; animation-delay: 4s;">❄</div>
-        <div class="snowflake" style="left: 80%; animation-delay: 2s; font-size: 0.8rem;">•</div>
+        <div class="snowflake" style="left: 75%; animation-delay: 1s; font-size: 1.2rem;">❅</div>
+        <div class="snowflake" style="left: 90%; animation-delay: 3s;">❄</div>
     </div>
 
-    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-300">
-        <div class="px-4 py-3 flex justify-between items-center max-w-2xl mx-auto">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-app-primary rounded-lg flex items-center justify-center text-white shadow-sm">
-                    <i class="fas fa-snowflake"></i>
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-white/50 shadow-sm transition-all duration-300">
+        <div class="px-3 py-3 flex justify-between items-center max-w-2xl mx-auto gap-2">
+            <div class="flex items-center gap-2 overflow-hidden">
+                <div class="w-10 h-10 flex-shrink-0 bg-gradient-to-tr from-kawaii-secondary to-blue-50 rounded-2xl flex items-center justify-center shadow-inner text-xl relative overflow-hidden group">
+                    <span class="group-hover:animate-bounce-slow inline-block">⛄</span>
+                    <div class="absolute inset-0 bg-white/20 rounded-2xl"></div>
                 </div>
-                <div>
-                    <h1 class="text-base font-bold tracking-wide text-slate-800 leading-tight">2025 北海道之旅</h1>
-                    <p class="text-[10px] text-slate-500 font-medium">Winter Trip Planner</p>
+                <div class="min-w-0">
+                    <h1 class="text-base font-black tracking-wide text-gray-800 truncate leading-tight">
+                        2025 北海道<br>冬の旅手帳
+                    </h1>
                 </div>
             </div>
-            
-            <a href="https://docs.google.com/document/d/1WI3KNDMLUYx4P_X6-Oxj5lBcrVkfZfUeL3ah2RJeojE/edit?usp=sharing" target="_blank" class="flex items-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200 px-3 py-1.5 rounded-full transition-colors text-xs font-bold">
-                <i class="fas fa-external-link-alt text-[10px]"></i>
-                <span>完整行程</span>
+            <a href="https://docs.google.com/document/d/1WI3KNDMLUYx4P_X6-Oxj5lBcrVkfZfUeL3ah2RJeojE/edit?usp=sharing" target="_blank" class="flex-shrink-0 flex items-center gap-1.5 bg-kawaii-primary text-white pl-3 pr-4 py-2 rounded-full font-bold text-xs shadow-md shadow-pink-200 hover:shadow-glow hover:scale-105 active:scale-95 transition-all">
+                <i class="fas fa-file-alt"></i> <span>看完整行程</span>
             </a>
         </div>
     </header>
 
     <main class="w-full relative max-w-2xl mx-auto p-4 z-10 pb-32">
-        
         <div id="tab-plan" class="tab-content active">
-            <div id="date-scroll" class="flex overflow-x-auto gap-2 pb-2 mb-4 hide-scrollbar sticky top-[65px] z-30 py-3 -mx-4 px-4 bg-app-bg/95 backdrop-blur-sm">
-                </div>
-
-            <div id="itinerary-container" class="space-y-4 relative pl-1 pr-1 mt-2">
-                </div>
-            
-            <div class="text-center mt-12 mb-8 border-t border-slate-200 pt-8">
-                <p class="text-xs text-slate-400 font-medium tracking-widest uppercase">End of Itinerary</p>
-            </div>
+            <div id="date-scroll" class="flex overflow-x-auto gap-3 pb-4 mb-2 hide-scrollbar sticky top-[70px] z-30 py-2 -mx-4 px-4 bg-gradient-to-b from-kawaii-base via-kawaii-base to-transparent"></div>
+            <div id="itinerary-container" class="space-y-6 relative pl-2 pr-2 mt-2"></div>
+            <div class="text-center mt-12 mb-8"><p class="text-xs text-gray-300 font-bold">—— 每一天都是新的冒險 ——</p></div>
         </div>
 
         <div id="tab-guide" class="tab-content">
             <div class="flex items-center gap-3 mb-6">
-                <div class="w-1 h-6 bg-app-primary rounded-full"></div>
-                <h2 class="text-xl font-bold text-slate-800">旅行筆記 & 攻略</h2>
+                <h2 class="text-2xl font-black text-kawaii-text">旅行筆記</h2>
+                <span class="bg-kawaii-accent/30 text-yellow-700 text-xs font-bold px-2 py-1 rounded-lg">豆知識</span>
             </div>
-            <div id="guide-container" class="grid grid-cols-1 gap-4"></div>
+            <div id="guide-container" class="grid grid-cols-1 gap-5"></div>
         </div>
 
         <div id="tab-wallet" class="tab-content">
-            <div class="bg-white rounded-2xl p-5 shadow-card border border-slate-200 mb-6 relative">
+            <div class="bg-white rounded-[32px] p-6 shadow-soft mb-6 relative border-4 border-kawaii-primary/10">
+                <div class="absolute top-4 right-6 text-kawaii-primary/20 text-6xl rotate-12"><i class="fas fa-coins"></i></div>
                 
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">匯率 (Rate)</label>
-                        <div class="relative">
-                            <input type="number" id="exchange-rate" value="0.201" step="0.001" class="w-full text-lg font-bold bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:border-app-primary focus:ring-1 focus:ring-app-primary outline-none transition-all" placeholder="0.201">
-                        </div>
+                <div class="relative z-10 flex gap-4 mb-4">
+                    <div class="flex-1">
+                        <label class="text-xs font-bold text-gray-400 mb-1 block tracking-wider">匯率 (Rate)</label>
+                        <input type="number" id="exchange-rate" value="0.201" step="0.001" class="w-full text-2xl font-black bg-transparent border-b-2 border-kawaii-primary/30 focus:border-kawaii-primary focus:outline-none text-kawaii-text" placeholder="0.201">
                     </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">人數 (Pax)</label>
-                        <div class="relative">
-                            <input type="number" id="traveler-count" value="2" min="1" class="w-full text-lg font-bold bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:border-app-primary focus:ring-1 focus:ring-app-primary outline-none transition-all text-center" onchange="updateSplitCalc()">
-                            <i class="fas fa-users absolute right-3 top-3 text-slate-400 text-xs"></i>
+                    <div class="w-20">
+                        <label class="text-xs font-bold text-gray-400 mb-1 block tracking-wider">人數</label>
+                        <div class="flex items-center">
+                            <i class="fas fa-user text-kawaii-primary mr-1 text-xs"></i>
+                            <input type="number" id="traveler-count" value="2" min="1" class="w-full text-2xl font-black bg-transparent border-b-2 border-kawaii-primary/30 focus:border-kawaii-primary focus:outline-none text-kawaii-text text-center" onchange="updateSplitCalc()">
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-slate-800 rounded-xl p-4 mb-4 text-white shadow-inner">
-                    <input type="text" id="calc-input" placeholder="0" class="w-full bg-transparent text-3xl text-right focus:outline-none font-mono tracking-wider font-bold placeholder-slate-600 mb-1">
-                    <div class="flex justify-between items-center text-slate-400 text-xs font-bold border-t border-slate-700 pt-2 mt-1">
-                        <span>JPY</span>
-                        <div class="flex items-center gap-2">
-                            <span>≈ TWD</span>
-                            <span id="calc-result-twd" class="text-app-secondary text-lg">0</span>
+                <div class="bg-gray-50 rounded-2xl p-4 mb-4 border border-gray-100 shadow-inner">
+                    <input type="text" id="calc-input" placeholder="0" class="w-full bg-transparent text-2xl text-right focus:outline-none mb-1 font-black text-kawaii-text font-mono tracking-widest">
+                    <div class="flex justify-between items-end border-t border-dashed border-gray-200 pt-2">
+                        <span class="text-xs text-gray-400 font-bold">JPY</span>
+                        <div class="text-right">
+                            <span class="text-xs text-gray-400 font-bold mr-1">約 TWD</span>
+                            <span id="calc-result-twd" class="text-lg font-bold text-kawaii-secondary">0</span>
                         </div>
                     </div>
                     <span id="calc-result-jpy" class="hidden">0</span>
                 </div>
 
-                <div class="grid grid-cols-4 gap-2 mb-4">
-                    <button onclick="appendCalc('+')" class="h-12 rounded-lg bg-slate-100 font-bold text-slate-500 hover:bg-slate-200 text-lg transition-colors">+</button>
-                    <button onclick="appendCalc('-')" class="h-12 rounded-lg bg-slate-100 font-bold text-slate-500 hover:bg-slate-200 text-lg transition-colors">-</button>
-                    <button onclick="appendCalc('*')" class="h-12 rounded-lg bg-slate-100 font-bold text-slate-500 hover:bg-slate-200 text-lg transition-colors">×</button>
-                    <button onclick="appendCalc('/')" class="h-12 rounded-lg bg-slate-100 font-bold text-slate-500 hover:bg-slate-200 text-lg transition-colors">÷</button>
+                <div class="grid grid-cols-4 gap-3 mb-4">
+                    <button onclick="appendCalc('+')" class="h-10 rounded-xl bg-gray-50 font-bold text-gray-400 hover:bg-gray-100">+</button>
+                    <button onclick="appendCalc('-')" class="h-10 rounded-xl bg-gray-50 font-bold text-gray-400 hover:bg-gray-100">-</button>
+                    <button onclick="appendCalc('*')" class="h-10 rounded-xl bg-gray-50 font-bold text-gray-400 hover:bg-gray-100">×</button>
+                    <button onclick="appendCalc('/')" class="h-10 rounded-xl bg-gray-50 font-bold text-gray-400 hover:bg-gray-100">÷</button>
                     
-                    <button onclick="appendCalc('7')" class="h-12 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 active:bg-slate-50 text-xl shadow-sm">7</button>
-                    <button onclick="appendCalc('8')" class="h-12 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 active:bg-slate-50 text-xl shadow-sm">8</button>
-                    <button onclick="appendCalc('9')" class="h-12 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 active:bg-slate-50 text-xl shadow-sm">9</button>
-                    <button onclick="clearCalc()" class="h-12 rounded-lg bg-red-50 text-red-500 font-bold text-lg active:bg-red-100 border border-red-100">C</button>
-
-                    <button onclick="appendCalc('4')" class="h-12 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 active:bg-slate-50 text-xl shadow-sm">4</button>
-                    <button onclick="appendCalc('5')" class="h-12 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 active:bg-slate-50 text-xl shadow-sm">5</button>
-                    <button onclick="appendCalc('6')" class="h-12 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 active:bg-slate-50 text-xl shadow-sm">6</button>
-                    <button onclick="calculate()" class="h-12 rounded-lg bg-app-primary text-white font-bold text-xl active:bg-sky-700 shadow-md shadow-sky-100">=</button>
-
-                    <button onclick="appendCalc('1')" class="h-12 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 active:bg-slate-50 text-xl shadow-sm">1</button>
-                    <button onclick="appendCalc('2')" class="h-12 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 active:bg-slate-50 text-xl shadow-sm">2</button>
-                    <button onclick="appendCalc('3')" class="h-12 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 active:bg-slate-50 text-xl shadow-sm">3</button>
-                    <button onclick="appendCalc('0')" class="h-12 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 active:bg-slate-50 text-xl shadow-sm">0</button>
+                    <button onclick="appendCalc('7')" class="h-12 rounded-2xl bg-white shadow-card font-black text-lg text-kawaii-text active:scale-95 transition-transform">7</button>
+                    <button onclick="appendCalc('8')" class="h-12 rounded-2xl bg-white shadow-card font-black text-lg text-kawaii-text active:scale-95 transition-transform">8</button>
+                    <button onclick="appendCalc('9')" class="h-12 rounded-2xl bg-white shadow-card font-black text-lg text-kawaii-text active:scale-95 transition-transform">9</button>
+                    <button onclick="clearCalc()" class="h-12 rounded-2xl bg-red-50 text-red-400 font-black text-lg active:scale-95 transition-transform">C</button>
+                    <button onclick="appendCalc('4')" class="h-12 rounded-2xl bg-white shadow-card font-black text-lg text-kawaii-text active:scale-95 transition-transform">4</button>
+                    <button onclick="appendCalc('5')" class="h-12 rounded-2xl bg-white shadow-card font-black text-lg text-kawaii-text active:scale-95 transition-transform">5</button>
+                    <button onclick="appendCalc('6')" class="h-12 rounded-2xl bg-white shadow-card font-black text-lg text-kawaii-text active:scale-95 transition-transform">6</button>
+                    <button onclick="calculate()" class="h-12 rounded-2xl bg-kawaii-secondary text-white font-black text-lg shadow-lg shadow-blue-200 active:scale-95 transition-transform">=</button>
+                    <button onclick="appendCalc('1')" class="h-12 rounded-2xl bg-white shadow-card font-black text-lg text-kawaii-text active:scale-95 transition-transform">1</button>
+                    <button onclick="appendCalc('2')" class="h-12 rounded-2xl bg-white shadow-card font-black text-lg text-kawaii-text active:scale-95 transition-transform">2</button>
+                    <button onclick="appendCalc('3')" class="h-12 rounded-2xl bg-white shadow-card font-black text-lg text-kawaii-text active:scale-95 transition-transform">3</button>
+                    <button onclick="appendCalc('0')" class="h-12 rounded-2xl bg-white shadow-card font-black text-lg text-kawaii-text active:scale-95 transition-transform">0</button>
                 </div>
 
-                <div class="border-t border-slate-100 pt-4 flex gap-2">
-                    <input type="text" id="expense-item" placeholder="消費項目..." class="flex-1 bg-slate-50 rounded-lg px-4 py-3 text-sm font-bold outline-none border border-slate-200 focus:border-app-primary focus:bg-white transition-all">
-                    <label class="w-12 flex items-center justify-center bg-slate-100 rounded-lg text-slate-500 cursor-pointer hover:bg-slate-200 transition-colors border border-slate-200">
+                <div class="border-t border-dashed border-gray-200 pt-4 flex gap-3">
+                    <input type="text" id="expense-item" placeholder="買了什麼呢..." class="flex-1 bg-gray-50 rounded-xl px-4 py-2 text-sm font-bold outline-none border border-transparent focus:border-kawaii-primary/50 transition-colors">
+                    <label class="w-10 h-10 flex items-center justify-center bg-kawaii-accent rounded-xl text-white cursor-pointer shadow-md active:scale-95 transition-transform">
                         <i class="fas fa-camera"></i>
                         <input type="file" id="expense-photo" accept="image/*" class="hidden" onchange="handlePhotoUpload(this)">
                     </label>
                 </div>
                 
-                <div class="mt-3 flex items-center justify-between">
-                    <div id="photo-status" class="text-xs text-slate-400 italic"></div>
+                <div class="mt-2 flex items-center justify-end gap-2 pr-1">
                     <label class="flex items-center gap-2 cursor-pointer select-none group">
-                        <span class="text-xs font-bold text-slate-500 group-hover:text-app-primary transition-colors">代墊款項 (Split Bill)</span>
-                        <div class="relative">
-                            <input type="checkbox" id="expense-is-advance" class="peer sr-only">
-                            <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-app-primary"></div>
+                        <input type="checkbox" id="expense-is-advance" class="peer hidden">
+                        <div class="w-4 h-4 rounded border-2 border-gray-300 peer-checked:bg-kawaii-secondary peer-checked:border-kawaii-secondary flex items-center justify-center transition-all bg-white group-active:scale-95">
+                            <i class="fas fa-check text-white text-[10px] opacity-0 peer-checked:opacity-100"></i>
                         </div>
+                        <span class="text-xs font-bold text-gray-400 peer-checked:text-kawaii-secondary transition-colors">幫別人代墊 (事後算)</span>
                     </label>
                 </div>
                 
-                <div id="photo-preview-container" class="hidden mt-3 relative w-full h-32 bg-slate-50 rounded-lg overflow-hidden border border-slate-200">
+                <div id="photo-preview-container" class="hidden mt-3 relative w-full h-32 bg-gray-100 rounded-xl overflow-hidden border-2 border-white shadow-sm">
                     <img id="photo-preview" class="w-full h-full object-contain">
-                    <button onclick="clearPhoto()" class="absolute top-2 right-2 bg-slate-800/80 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs">×</button>
+                    <button onclick="clearPhoto()" class="absolute top-2 right-2 bg-red-400 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold shadow-md">×</button>
                 </div>
 
-                <button onclick="addExpense()" class="w-full bg-slate-800 text-white py-3.5 rounded-xl shadow-lg shadow-slate-200 mt-4 font-bold tracking-wide active:scale-[0.98] transition-all flex items-center justify-center gap-2 hover:bg-slate-900">
-                    <i class="fas fa-plus-circle"></i> 新增支出紀錄
+                <button onclick="addExpense()" class="w-full bg-kawaii-primary text-white py-3 rounded-2xl shadow-lg shadow-pink-200 mt-4 font-black tracking-wide active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-plus-circle"></i> 記下來
                 </button>
             </div>
 
-            <div class="px-1">
-                <div class="bg-white p-4 rounded-xl border border-blue-100 shadow-sm mb-6 flex justify-between items-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-transparent pointer-events-none"></div>
-                    <div class="relative z-10">
-                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Advance</div>
-                        <div class="text-xl font-black text-slate-800">¥<span id="advance-total">0</span></div>
+            <div class="px-2">
+                <div class="bg-gradient-to-r from-pink-50 to-white p-4 rounded-2xl border border-pink-100 shadow-sm mb-6 flex justify-between items-center relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 w-16 h-16 bg-pink-200 rounded-full opacity-30 blur-xl"></div>
+                    <div>
+                        <div class="text-[10px] font-bold text-gray-400 mb-1">代墊總額 (Advance Total)</div>
+                        <div class="text-xl font-black text-gray-700">¥<span id="advance-total">0</span></div>
                     </div>
                     <div class="text-right z-10">
-                        <div class="text-[10px] font-bold text-app-primary uppercase tracking-wider mb-1">Per Person</div>
-                        <div class="text-2xl font-black text-app-primary">¥<span id="split-result">0</span></div>
+                        <div class="text-[10px] font-bold text-kawaii-primary mb-1">每人應付 (Per Person)</div>
+                        <div class="text-2xl font-black text-kawaii-primary">¥<span id="split-result">0</span></div>
                     </div>
                 </div>
 
-                <div class="flex justify-between items-end mb-4 px-1">
-                    <h3 class="font-bold text-lg text-slate-800">支出明細</h3>
-                    <div class="text-xs font-bold text-slate-500">總計: <span class="text-app-text">¥</span><span id="total-jpy">0</span></div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-black text-lg text-kawaii-text">支出紀錄</h3>
+                    <span class="text-xs font-bold bg-white px-3 py-1 rounded-full shadow-sm text-gray-500">Total: <span class="text-kawaii-primary">¥</span><span id="total-jpy">0</span></span>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 mb-3">
-                    <button onclick="syncToCloud()" id="btn-upload" class="bg-white border border-slate-200 text-slate-600 py-2.5 rounded-lg font-bold text-xs shadow-sm active:bg-slate-50 transition-all flex items-center justify-center gap-2 hover:border-app-primary hover:text-app-primary">
+                <div class="flex gap-2 mb-2">
+                    <button onclick="syncToCloud()" id="btn-upload" class="flex-1 bg-blue-400 text-white py-2 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
                         <i class="fas fa-cloud-upload-alt"></i> 備份到雲端
                     </button>
-                    <button onclick="syncFromCloud()" id="btn-download" class="bg-white border border-slate-200 text-slate-600 py-2.5 rounded-lg font-bold text-xs shadow-sm active:bg-slate-50 transition-all flex items-center justify-center gap-2 hover:border-app-primary hover:text-app-primary">
+                    <button onclick="syncFromCloud()" id="btn-download" class="flex-1 bg-gray-400 text-white py-2 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
                         <i class="fas fa-cloud-download-alt"></i> 從雲端還原
                     </button>
                 </div>
-                <div class="flex justify-between items-center px-1 mb-6">
-                    <div class="text-[10px] text-slate-300 font-mono">ID: <span id="my-device-id">loading...</span></div>
-                    <div id="sync-status" class="text-[10px] font-bold text-app-primary transition-all h-4"></div>
+                <div class="text-[10px] text-center text-gray-300 mb-2 font-mono">
+                    Device ID: <span id="my-device-id">loading...</span>
                 </div>
+                <div id="sync-status" class="text-[10px] text-center text-gray-400 mb-4 h-4 font-bold transition-all"></div>
 
                 <div id="expense-container" class="space-y-6 pb-8"></div>
-                <button onclick="clearExpenses()" class="w-full text-center text-xs text-slate-300 mt-4 hover:text-red-400 transition-colors py-4">清空所有紀錄</button>
+                <button onclick="clearExpenses()" class="w-full text-center text-xs text-gray-300 mt-2 hover:text-red-300 transition-colors">🗑️ 清空所有紀錄</button>
             </div>
         </div>
 
         <div id="tab-lists" class="tab-content px-1">
-            <div class="bg-white rounded-2xl p-5 shadow-card border border-slate-200 mb-6">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center"><i class="fas fa-check"></i></div>
-                    <h3 class="text-lg font-bold text-slate-800">行李檢查表</h3>
-                </div>
-                <div id="checklist-container" class="space-y-1"></div>
-                <div class="mt-5 flex gap-2">
-                    <input type="text" id="new-todo" placeholder="新增項目..." class="flex-1 bg-slate-50 rounded-lg px-4 text-sm font-bold outline-none border border-slate-200 focus:border-emerald-500 transition-colors h-10">
-                    <button onclick="addTodo()" class="bg-emerald-500 text-white w-10 h-10 rounded-lg shadow-sm hover:bg-emerald-600 active:scale-95 transition-all flex items-center justify-center"><i class="fas fa-plus"></i></button>
+            <div class="bg-white rounded-[32px] p-6 shadow-soft mb-6 relative">
+                <div class="w-12 h-12 bg-kawaii-green/20 rounded-full flex items-center justify-center text-kawaii-green text-xl absolute -top-4 -left-2 shadow-sm border-4 border-kawaii-base"><i class="fas fa-suitcase-rolling"></i></div>
+                <h3 class="text-lg font-black mb-4 pl-10 text-kawaii-text">行李檢查表</h3>
+                <div id="checklist-container" class="space-y-3"></div>
+                <div class="mt-6 flex gap-3 relative">
+                    <input type="text" id="new-todo" placeholder="新增項目..." class="flex-1 bg-gray-50 rounded-full px-4 text-sm font-bold outline-none border-2 border-transparent focus:border-kawaii-green/50 transition-colors h-10">
+                    <button onclick="addTodo()" class="bg-kawaii-green text-white w-10 h-10 rounded-full shadow-md hover:shadow-lg active:scale-90 transition-all flex items-center justify-center"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
-            
-            <div class="bg-white rounded-2xl p-5 shadow-card border border-yellow-100 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-1 bg-yellow-400"></div>
-                <h3 class="text-lg font-bold mb-3 text-slate-800 flex items-center gap-2"><i class="fas fa-pen-nib text-yellow-500"></i> 隨手記</h3>
-                <textarea id="memo-area" class="w-full h-48 bg-yellow-50/50 p-3 text-sm leading-7 outline-none resize-none font-medium text-slate-700 rounded-lg border-0 placeholder-slate-400" placeholder="記錄你的旅行靈感、網址或日記..."></textarea>
+            <div class="bg-[#FFFDF0] rounded-[32px] p-6 shadow-card relative border-2 border-[#FEF9E7]">
+                <div class="absolute -top-3 -right-2 text-2xl rotate-12">📝</div>
+                <h3 class="text-lg font-black mb-2 text-[#C9B36B]">隨手記</h3>
+                <textarea id="memo-area" class="w-full h-40 bg-transparent p-2 text-sm leading-8 outline-none resize-none font-bold text-[#8D7F57] placeholder-[#D8CFB4]" style="background-image: repeating-linear-gradient(transparent, transparent 31px, #EBE3CC 31px, #EBE3CC 32px); line-height: 32px;" placeholder="這裡可以貼連結或寫日記..."></textarea>
             </div>
         </div>
 
-        <div id="tab-info" class="tab-content space-y-4">
-             <div class="app-card p-5">
-                <div class="flex items-center gap-3 mb-4"><div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center"><i class="fas fa-hotel"></i></div><h3 class="font-bold text-lg text-slate-800">住宿資訊</h3></div>
-                <div class="pl-2 border-l-2 border-indigo-500 ml-2 mb-3"><h4 class="text-base font-bold text-slate-800">Hotel Vista Sapporo Odori</h4><p class="text-xs text-slate-500 font-bold">ホテルビスタ札幌 [大通]</p></div>
-                <div class="bg-slate-50 p-3 rounded-lg text-sm text-slate-600 flex items-start gap-2"><i class="fas fa-map-marker-alt mt-1 text-indigo-500"></i><span class="leading-relaxed">〒060-0063<br>北海道札幌市中央区南3条西5丁目16</span></div>
-                <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Vista+Sapporo+Odori" target="_blank" class="mt-4 flex items-center justify-center w-full bg-white border border-slate-200 text-slate-700 py-2.5 rounded-lg font-bold text-xs hover:bg-slate-50 transition-colors">開啟 Google 地圖</a>
+        <div id="tab-info" class="tab-content space-y-5">
+             <div class="bg-white rounded-3xl p-5 shadow-soft border border-gray-50">
+                <div class="flex items-center gap-3 mb-4"><span class="w-8 h-8 rounded-full bg-kawaii-primary/20 flex items-center justify-center text-kawaii-primary text-xs"><i class="fas fa-bed"></i></span><h3 class="font-black text-lg text-kawaii-text">住宿資訊</h3></div>
+                <div class="pl-2 border-l-4 border-kawaii-primary/30 ml-2"><h4 class="text-base font-black text-kawaii-text">Hotel Vista Sapporo Odori</h4><p class="text-xs text-gray-400 font-bold">ホテルビスタ札幌 [大通]</p></div>
+                <div class="mt-4 space-y-2 text-sm font-medium text-gray-600 bg-gray-50 p-4 rounded-2xl">
+                    <div class="flex items-start gap-3"><i class="fas fa-map-marker-alt mt-1 text-kawaii-primary"></i><p class="text-xs leading-relaxed">〒060-0063<br>北海道札幌市中央区南3条西5丁目16<br><span class="text-gray-400">(狸小路 5丁目附近)</span></p></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Vista+Sapporo+Odori" target="_blank" class="mt-4 flex items-center justify-center w-full bg-white border-2 border-gray-100 text-kawaii-text py-2.5 rounded-xl font-bold text-xs shadow-sm hover:border-kawaii-primary/50 transition-colors"><i class="fas fa-location-arrow mr-2 text-kawaii-primary"></i> 開啟地圖</a>
             </div>
-            
-            <div class="app-card p-5 border-l-4 border-l-red-400">
-                 <h3 class="font-bold text-lg mb-4 flex items-center gap-2 text-red-500"><i class="fas fa-exclamation-circle"></i> 緊急聯絡</h3>
-                 <div class="grid grid-cols-2 gap-3 mb-3">
-                     <a href="tel:110" class="bg-red-50 p-3 rounded-lg flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform"><i class="fas fa-shield-alt text-red-500 text-xl"></i><span class="text-xs font-bold text-red-600">警察 110</span></a>
-                     <a href="tel:119" class="bg-red-50 p-3 rounded-lg flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform"><i class="fas fa-ambulance text-red-500 text-xl"></i><span class="text-xs font-bold text-red-600">救護 119</span></a>
+            <div class="bg-gradient-to-br from-[#E0F7FA] to-white rounded-3xl p-5 shadow-soft relative overflow-hidden">
+                <div class="absolute -right-5 -top-5 w-20 h-20 bg-blue-100 rounded-full opacity-50 blur-xl"></div>
+                <h3 class="font-black text-lg mb-4 flex items-center gap-2 relative z-10 text-cyan-800"><i class="fas fa-flag text-cyan-400"></i> 一日遊集合</h3>
+                <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white mb-3 shadow-sm">
+                    <div class="flex justify-between items-start"><span class="bg-cyan-100 text-cyan-700 text-[10px] font-black px-2 py-1 rounded-md">12/22 登別洞爺</span><a href="https://www.google.com/maps/search/?api=1&query=%E5%A4%A7%E9%80%9A%E5%85%AC%E5%9C%92+%E5%B8%8C%E6%9C%9B%E3%81%AE%E5%83%8F" target="_blank" class="text-cyan-400"><i class="fas fa-map-pin"></i></a></div>
+                    <div class="mt-2"><div class="text-2xl font-black text-kawaii-text">08:00 <span class="text-xs font-normal text-gray-400">集合</span></div><div class="text-sm font-bold text-gray-600">大通公園 希望之像</div></div>
+                </div>
+                <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white shadow-sm">
+                    <div class="flex justify-between items-start"><span class="bg-blue-100 text-blue-700 text-[10px] font-black px-2 py-1 rounded-md">12/23 旭川美瑛</span><a href="https://www.google.com/maps/search/?api=1&query=%E6%9C%AD%E5%B9%8C%E9%A7%85%E5%8C%97%E5%8F%A3%E5%9B%A3%E4%BD%93%E3%83%90%E3%82%B9%E4%B9%97%E3%82%8A%E5%A0%B4" target="_blank" class="text-blue-400"><i class="fas fa-map-pin"></i></a></div>
+                    <div class="mt-2"><div class="text-2xl font-black text-kawaii-text">07:50 <span class="text-xs font-normal text-gray-400">集合</span></div><div class="text-sm font-bold text-gray-600">札幌站 北口巴士站</div></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-3xl p-5 shadow-soft border-l-8 border-red-200">
+                 <h3 class="font-black text-lg mb-3">SOS 緊急聯絡</h3>
+                 <div class="grid grid-cols-2 gap-3">
+                     <a href="tel:110" class="bg-red-50 p-3 rounded-xl flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform"><i class="fas fa-user-shield text-red-400 text-xl"></i><span class="text-xs font-black text-red-400">警察 110</span></a>
+                     <a href="tel:119" class="bg-red-50 p-3 rounded-xl flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform"><i class="fas fa-ambulance text-red-400 text-xl"></i><span class="text-xs font-black text-red-400">救護 119</span></a>
                  </div>
-                 <div class="text-center"><div class="text-[10px] text-slate-400 mb-1">駐日經濟文化代表處</div><a href="tel:+81112222930" class="font-bold text-slate-700 text-sm border-b border-dashed border-slate-300 pb-0.5">+81-11-222-2930</a></div>
+                 <div class="mt-3 bg-gray-50 rounded-xl p-3 text-center"><div class="text-[10px] text-gray-400 mb-1">駐日經濟文化代表處</div><a href="tel:+81112222930" class="font-black text-gray-700">+81-11-222-2930</a></div>
             </div>
         </div>
     </main>
 
-    <nav class="nav-bar-float fixed bottom-0 left-0 w-full pb-safe z-50 px-6 h-[80px] flex justify-between items-center">
-        <button class="nav-item active flex flex-col items-center justify-center gap-1 w-14 transition-all duration-200" onclick="switchTab('plan', this)">
-            <i class="fas fa-calendar-alt text-xl icon-container transition-transform duration-200"></i>
-            <span class="text-[10px] font-bold">行程</span>
-        </button>
-        <button class="nav-item flex flex-col items-center justify-center gap-1 w-14 transition-all duration-200" onclick="switchTab('guide', this)">
-            <i class="fas fa-map text-xl icon-container transition-transform duration-200"></i>
-            <span class="text-[10px] font-bold">導覽</span>
-        </button>
-        <button class="nav-item flex flex-col items-center justify-center gap-1 w-14 transition-all duration-200" onclick="switchTab('wallet', this)">
-            <div class="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center text-white shadow-lg shadow-slate-300 -mt-6 border-4 border-[#F8FAFC]">
-                <i class="fas fa-wallet text-lg"></i>
-            </div>
-            <span class="text-[10px] font-bold mt-1">記帳</span>
-        </button>
-        <button class="nav-item flex flex-col items-center justify-center gap-1 w-14 transition-all duration-200" onclick="switchTab('lists', this)">
-            <i class="fas fa-check-square text-xl icon-container transition-transform duration-200"></i>
-            <span class="text-[10px] font-bold">清單</span>
-        </button>
-        <button class="nav-item flex flex-col items-center justify-center gap-1 w-14 transition-all duration-200" onclick="switchTab('info', this)">
-            <i class="fas fa-info-circle text-xl icon-container transition-transform duration-200"></i>
-            <span class="text-[10px] font-bold">資訊</span>
-        </button>
+    <nav class="nav-bar-float fixed bottom-0 left-0 w-full pb-safe z-50">
+        <div class="flex justify-around items-end h-20 px-2">
+            <button class="nav-item active w-full h-full pb-2 flex flex-col items-center justify-end transition-all duration-300 group" onclick="switchTab('plan', this)">
+                <div class="icon-container w-10 h-10 rounded-2xl flex items-center justify-center mb-1 transition-all duration-300 bg-transparent text-gray-400"><i class="fas fa-map-marked-alt text-lg"></i></div>
+                <span class="text-[10px] font-bold text-gray-400 group-[.active]:text-kawaii-primary transition-colors">行程</span>
+            </button>
+            <button class="nav-item w-full h-full pb-2 flex flex-col items-center justify-end transition-all duration-300 group" onclick="switchTab('guide', this)">
+                <div class="icon-container w-10 h-10 rounded-2xl flex items-center justify-center mb-1 transition-all duration-300 bg-transparent text-gray-400"><i class="fas fa-book-open text-lg"></i></div>
+                <span class="text-[10px] font-bold text-gray-400 group-[.active]:text-kawaii-primary transition-colors">導覽</span>
+            </button>
+            <button class="nav-item w-full h-full pb-2 flex flex-col items-center justify-end transition-all duration-300 group" onclick="switchTab('wallet', this)">
+                <div class="icon-container w-12 h-12 rounded-[20px] flex items-center justify-center mb-1 transition-all duration-300 bg-transparent text-gray-400 -mt-4 group-[.active]:-mt-6"><i class="fas fa-wallet text-xl"></i></div>
+                <span class="text-[10px] font-bold text-gray-400 group-[.active]:text-kawaii-primary transition-colors">錢包</span>
+            </button>
+            <button class="nav-item w-full h-full pb-2 flex flex-col items-center justify-end transition-all duration-300 group" onclick="switchTab('lists', this)">
+                <div class="icon-container w-10 h-10 rounded-2xl flex items-center justify-center mb-1 transition-all duration-300 bg-transparent text-gray-400"><i class="fas fa-tasks text-lg"></i></div>
+                <span class="text-[10px] font-bold text-gray-400 group-[.active]:text-kawaii-primary transition-colors">清單</span>
+            </button>
+            <button class="nav-item w-full h-full pb-2 flex flex-col items-center justify-end transition-all duration-300 group" onclick="switchTab('info', this)">
+                <div class="icon-container w-10 h-10 rounded-2xl flex items-center justify-center mb-1 transition-all duration-300 bg-transparent text-gray-400"><i class="fas fa-info-circle text-lg"></i></div>
+                <span class="text-[10px] font-bold text-gray-400 group-[.active]:text-kawaii-primary transition-colors">資訊</span>
+            </button>
+        </div>
     </nav>
 
     <script>
-        // 全域變數宣告
+        // 資料與邏輯部分
+        
+        // ★★★ 關鍵修正：將變數宣告移到最上方，確保全域可存取 ★★★
         let currentPhotoBase64 = null;
-        let expenses = JSON.parse(localStorage.getItem('expenses_book_2025_v15')) || []; // 升級版本號 v15
+        let expenses = JSON.parse(localStorage.getItem('expenses_book_2025_v13')) || [];
         let todoList = JSON.parse(localStorage.getItem('todo_book_2025_v7')) || [
             { text: "護照 (效期6個月以上) 📕", done: false },
             { text: "Visit Japan Web (截圖備用) 📱", done: false },
@@ -358,10 +305,9 @@
             { text: "常備藥 (感冒/暈車/外傷/止痛) 💊", done: false }
         ];
 
-        // 資料
         const itineraryData = [
             {
-                date: "12/20", day: "六", title: "前進雪國", active: true,
+                date: "12/20", day: "六", title: "前進雪國 ✈️", active: true,
                 weather: { icon: "fa-snowflake", temp: "-2°", desc: "大雪" },
                 events: [
                     { time: "09:10", desc: "桃園機場 (T1)", type: "transport", note: "提早3hr!", highlight: true, details: "09:10前抵達。酷航櫃台人多，請提早。填寫 Visit Japan Web。" },
@@ -373,7 +319,7 @@
                 ]
             },
             {
-                date: "12/21", day: "日", title: "札幌市區巡禮", active: false,
+                date: "12/21", day: "日", title: "札幌市區巡禮 ⛩️", active: false,
                 weather: { icon: "fa-cloud-meatball", temp: "-3°", desc: "多雲雪" },
                 events: [
                     { time: "08:30", desc: "諏訪神社", type: "spot", details: "必買超可愛「銀喉長尾山雀」御守！" },
@@ -387,7 +333,7 @@
                 ]
             },
             {
-                date: "12/22", day: "一", title: "登別洞爺一日遊", active: false,
+                date: "12/22", day: "一", title: "登別洞爺一日遊 🚌", active: false,
                 weather: { icon: "fa-cloud-sun", temp: "-1°", desc: "晴時雲" },
                 events: [
                     { time: "07:40", desc: "集合：大通公園", type: "transport", highlight: true, note: "西3丁目", details: "08:00 準時發車。大通公園西3丁目（31號出口）。" },
@@ -398,7 +344,7 @@
                 ]
             },
             {
-                date: "12/23", day: "二", title: "旭川美瑛夢幻遊", active: false,
+                date: "12/23", day: "二", title: "旭川美瑛夢幻遊 🐧", active: false,
                 weather: { icon: "fa-snowflake", temp: "-6°", desc: "大雪" },
                 events: [
                     { time: "07:50", desc: "集合：札幌北口", type: "transport", highlight: true, details: "札幌站北口巴士停車場。" },
@@ -409,7 +355,7 @@
                 ]
             },
             {
-                date: "12/24", day: "三", title: "白色聖誕夜", active: false,
+                date: "12/24", day: "三", title: "白色聖誕夜 🎄", active: false,
                 weather: { icon: "fa-snowflake", temp: "-2°", desc: "飄雪" },
                 events: [
                     { time: "08:30", desc: "羊之丘展望台", type: "activity", details: "免費體驗玩雪。" },
@@ -421,7 +367,7 @@
                 ]
             },
             {
-                date: "12/25", day: "四", title: "小樽浪漫漫步", active: false,
+                date: "12/25", day: "四", title: "小樽浪漫漫步 🕯️", active: false,
                 weather: { icon: "fa-cloud", temp: "-3°", desc: "陰天" },
                 events: [
                     { time: "09:10", desc: "前往小樽", type: "transport", details: "搭乘 JR 快速 Airport。" },
@@ -432,7 +378,7 @@
                 ]
             },
             {
-                date: "12/26", day: "五", title: "再見北海道", active: false,
+                date: "12/26", day: "五", title: "再見北海道 👋", active: false,
                 weather: { icon: "fa-sun", temp: "-1°", desc: "晴天" },
                 events: [
                     { time: "08:30", desc: "前往機場", type: "transport", details: "搭巴士或 JR。建議 12:20 到機場。" },
@@ -445,9 +391,9 @@
 
         const guideData = [
             { title: "小樽堺町通り商店街", content: "充滿懷舊風情的必逛街道！這條街上有著名的「小樽音樂盒堂」、「北一硝子」玻璃工坊，還有超好吃的「LeTAO」起司蛋糕總店。想買伴手禮來這裡準沒錯！", tags: ["購物", "散步", "小樽"] },
-            { title: "大丸札幌店 (Daimaru)", content: "與札幌車站直結，非常好逛！8樓有必去的「Pokémon Center Sapporo」，B1 地下食品街更是美食天堂，各種甜點便當應有盡有。", tags: ["寶可夢", "美食", "伴手禮"] },
+            { title: "大丸札幌店 (Daimaru)", content: "與札幌車站直結，非常好逛！8樓有必去的「Pokémon Center Sapporo (寶可夢中心)」，B1 地下食品街 (Depachika) 更是美食天堂，各種甜點便當應有盡有。", tags: ["寶可夢", "美食", "伴手禮"] },
             { title: "狸小路商店街", content: "札幌最經典的商店街，從1丁目到7丁目都有屋頂，下大雪也不怕！藥妝店(如松本清、札幌藥妝)、唐吉軻德都在這裡，是掃貨的聖地。", tags: ["藥妝", "必逛", "雨備"] },
-            { title: "札幌工廠 (Sapporo Factory)", content: "由紅磚啤酒廠改建的購物中心，保留了巨大的煙囪。中庭非常挑高寬敞，冬季會有巨大的室內聖誕樹，氣氛超級浪漫！", tags: ["紅磚", "拍照", "室內"] },
+            { title: "札幌工廠 (Sapporo Factory)", content: "由紅磚啤酒廠改建的購物中心，保留了巨大的煙囪。中庭 (Atrium) 非常挑高寬敞，冬季會有巨大的室內聖誕樹，氣氛超級浪漫！", tags: ["紅磚", "拍照", "室內"] },
             { title: "白色戀人公園", content: "不只是賣餅乾，更像一座雪國城堡！冬季庭園有盛大點燈，一定要在戶外愛心拱門拍照。", tags: ["浪漫", "必去"] },
             { title: "企鵝散步", content: "旭山動物園冬季限定！看著國王企鵝搖搖晃晃走在雪道上，萌翻天。", tags: ["動物", "限定"] },
             { title: "小樽運河", content: "黃昏時分煤氣燈亮起是最浪漫的時刻。站在「淺草橋」上可以拍到最經典角度。", tags: ["拍照", "夜景"] },
@@ -496,120 +442,54 @@
             btn.classList.add('active');
             window.scrollTo(0, 0);
         }
-
         function renderPlanTabs() {
             const container = document.getElementById('date-scroll');
             container.innerHTML = '';
             itineraryData.forEach((item, index) => {
                 const btn = document.createElement('button');
                 const isActive = index === 0;
-                // 日期選擇器樣式優化：深藍色膠囊
-                btn.className = `flex-shrink-0 w-16 h-16 flex flex-col items-center justify-center rounded-2xl transition-all duration-300 ${isActive ? 'bg-slate-800 text-white shadow-lg scale-105' : 'bg-white text-slate-400 border border-slate-100'}`;
-                btn.innerHTML = `
-                    <span class="text-[10px] font-bold opacity-80 mb-0.5">${item.date}</span>
-                    <span class="text-lg font-black">${item.day}</span>
-                `;
+                btn.className = `flex-shrink-0 w-[4.5rem] py-2 text-center transition-all rounded-full flex flex-col items-center justify-center gap-0.5 group ${isActive ? 'bg-kawaii-primary text-white shadow-lg shadow-pink-200 scale-105' : 'bg-white text-gray-400 border border-gray-100'}`;
+                btn.innerHTML = `<span class="text-[10px] font-bold opacity-80">${item.date}</span><span class="text-base font-black">${item.day}</span>`;
                 btn.onclick = () => {
                     Array.from(container.children).forEach(c => {
-                        c.className = 'flex-shrink-0 w-16 h-16 flex flex-col items-center justify-center rounded-2xl transition-all duration-300 bg-white text-slate-400 border border-slate-100';
+                        c.className = 'flex-shrink-0 w-[4.5rem] py-2 text-center transition-all rounded-full flex flex-col items-center justify-center gap-0.5 group bg-white text-gray-400 border border-gray-100';
                     });
-                    btn.className = 'flex-shrink-0 w-16 h-16 flex flex-col items-center justify-center rounded-2xl transition-all duration-300 bg-slate-800 text-white shadow-lg scale-105';
+                    btn.className = 'flex-shrink-0 w-[4.5rem] py-2 text-center transition-all rounded-full flex flex-col items-center justify-center gap-0.5 group bg-kawaii-primary text-white shadow-lg shadow-pink-200 scale-105';
                     renderTimeline(index);
                 };
                 container.appendChild(btn);
             });
         }
-
         function renderTimeline(index) {
             const dayData = itineraryData[index];
             const container = document.getElementById('itinerary-container');
             let html = `<div class="timeline-line"></div>`;
-            
-            // 標題區域優化
-            html += `
-                <div class="mb-8 ml-8">
-                     <div class="flex justify-between items-start pr-2">
-                        <div>
-                            <h2 class="text-2xl font-black text-slate-800 tracking-wide mb-1">${dayData.title}</h2>
-                            <div class="flex items-center text-slate-400 text-xs font-bold gap-2">
-                                <i class="fas fa-calendar-alt"></i> ${dayData.date} (${dayData.day})
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-center bg-blue-50 px-3 py-2 rounded-xl text-blue-500 font-bold border border-blue-100">
-                            <i class="fas ${dayData.weather.icon} text-lg mb-1"></i>
-                            <span class="text-xs">${dayData.weather.temp}</span>
-                        </div>
-                     </div>
-                </div>
-            `;
-
+            html += `<div class="mb-6 ml-10"><div class="flex justify-between items-center pr-2"><h2 class="text-2xl font-black text-kawaii-text tracking-wide">${dayData.title}</h2><div class="flex flex-col items-center bg-white px-3 py-1.5 rounded-2xl shadow-sm border border-gray-50"><i class="fas ${dayData.weather.icon} text-kawaii-secondary text-lg mb-1"></i><span class="text-xs font-bold text-gray-400">${dayData.weather.temp}</span></div></div></div>`;
             dayData.events.forEach((event, idx) => {
                 const hasDetails = event.details ? true : false;
                 const eventId = `event-${idx}`;
-                
-                // 圖標配色優化 (更專業的深色系)
-                let iconClass = 'fa-circle'; let iconColor = 'text-slate-400'; let circleBg = 'bg-white'; let circleBorder = 'border-slate-200';
-                
-                if (event.type === 'transport') { iconClass = 'fa-train'; iconColor = 'text-white'; circleBg = 'bg-blue-500'; circleBorder = 'border-blue-500'; }
-                else if (event.type === 'food') { iconClass = 'fa-utensils'; iconColor = 'text-white'; circleBg = 'bg-orange-400'; circleBorder = 'border-orange-400'; }
-                else if (event.type === 'stay') { iconClass = 'fa-bed'; iconColor = 'text-white'; circleBg = 'bg-indigo-500'; circleBorder = 'border-indigo-500'; }
-                else if (event.type === 'spot') { iconClass = 'fa-camera'; iconColor = 'text-white'; circleBg = 'bg-emerald-500'; circleBorder = 'border-emerald-500'; }
-                else if (event.type === 'shop') { iconClass = 'fa-shopping-bag'; iconColor = 'text-white'; circleBg = 'bg-pink-500'; circleBorder = 'border-pink-500'; }
-                else if (event.type === 'walk') { iconClass = 'fa-walking'; iconColor = 'text-white'; circleBg = 'bg-slate-500'; circleBorder = 'border-slate-500'; }
-
-                html += `
-                    <div class="relative pl-10 pb-6 z-10 group">
-                        <div class="absolute left-[17px] top-4 w-4 h-4 ${circleBg} ${circleBorder} border rounded-full flex items-center justify-center z-20 shadow-sm transition-transform group-hover:scale-110">
-                            <i class="fas ${iconClass} ${iconColor} text-[8px]"></i>
-                        </div>
-
-                        <div class="app-card p-4 relative cursor-pointer active:scale-[0.99] hover:shadow-md"
-                             onclick="${hasDetails ? `toggleDetails('${eventId}', this)` : ''}">
-
-                            ${event.highlight ? '<div class="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>' : ''}
-
-                            <div class="flex items-center gap-3 mb-1">
-                                <span class="font-mono font-bold text-lg text-slate-700">${event.time}</span>
-                                ${event.note ? `<span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">${event.note}</span>` : ''}
-                            </div>
-
-                            <h4 class="text-base font-bold text-slate-800 mb-1 leading-snug">${event.desc}</h4>
-
-                            ${hasDetails ? `
-                            <div id="${eventId}" class="event-details text-sm text-slate-500">
-                                <p class="mb-3 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100">${event.details}</p>
-                                <div class="flex gap-2">
-                                    ${event.mapLink ? `<a href="${event.mapLink}" target="_blank" class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-bold hover:bg-blue-100 transition-colors flex items-center gap-1" onclick="event.stopPropagation()"><i class="fas fa-map-marker-alt"></i> 地圖</a>` : ''}
-                                </div>
-                            </div>
-                            <div class="absolute bottom-2 right-3 opacity-20 text-slate-400 expand-icon transition-transform duration-300">
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            ` : ''}
-                        </div>
-                    </div>`;
+                let iconClass = 'fa-circle'; let iconColor = 'text-gray-300'; let circleBg = 'bg-white'; let circleBorder = 'border-gray-200';
+                if (event.type === 'transport') { iconClass = 'fa-train'; iconColor = 'text-white'; circleBg = 'bg-kawaii-secondary'; circleBorder = 'border-kawaii-secondary'; }
+                else if (event.type === 'food') { iconClass = 'fa-utensils'; iconColor = 'text-white'; circleBg = 'bg-kawaii-primary'; circleBorder = 'border-kawaii-primary'; }
+                else if (event.type === 'stay') { iconClass = 'fa-bed'; iconColor = 'text-white'; circleBg = 'bg-kawaii-purple'; circleBorder = 'border-kawaii-purple'; }
+                else if (event.type === 'spot') { iconClass = 'fa-camera'; iconColor = 'text-white'; circleBg = 'bg-kawaii-green'; circleBorder = 'border-kawaii-green'; }
+                else if (event.type === 'shop') { iconClass = 'fa-shopping-bag'; iconColor = 'text-white'; circleBg = 'bg-kawaii-accent'; circleBorder = 'border-kawaii-accent'; }
+                else if (event.type === 'walk') { iconClass = 'fa-walking'; iconColor = 'text-white'; circleBg = 'bg-orange-300'; circleBorder = 'border-orange-300'; }
+                html += `<div class="relative pl-10 pb-5 z-10 group"><div class="absolute left-[18px] top-4 w-6 h-6 ${circleBg} ${circleBorder} border-2 rounded-full flex items-center justify-center z-20 shadow-md transform transition-transform group-hover:scale-110"><i class="fas ${iconClass} ${iconColor} text-[10px]"></i></div><div class="kawaii-card p-4 bg-white relative cursor-pointer active:scale-[0.98]" onclick="${hasDetails ? `toggleDetails('${eventId}', this)` : ''}">${event.highlight ? '<div class="absolute top-0 right-0 bg-kawaii-accent text-white text-[10px] font-black px-3 py-1 rounded-bl-xl rounded-tr-lg shadow-sm">IMPORTANT</div>' : ''}<div class="flex items-baseline gap-3 mb-1"><span class="font-black text-xl text-kawaii-text font-mono opacity-80">${event.time}</span></div><h4 class="text-base font-bold text-gray-700 mb-1 leading-snug">${event.desc}</h4>${event.note ? `<p class="text-xs text-kawaii-primary font-bold flex items-center gap-1"><i class="fas fa-star"></i> ${event.note}</p>` : ''}${hasDetails ? `<div id="${eventId}" class="event-details text-sm text-gray-500"><p class="mb-3 leading-relaxed bg-gray-50 p-3 rounded-xl">${event.details}</p><div class="flex gap-2">${event.mapLink ? `<a href="${event.mapLink}" target="_blank" class="px-3 py-1 bg-blue-50 text-blue-400 rounded-full text-xs font-bold hover:bg-blue-100 transition-colors" onclick="event.stopPropagation()">📍 地圖</a>` : ''}</div></div><div class="absolute bottom-2 right-3 opacity-20 text-gray-400 expand-icon transition-transform duration-300"><i class="fas fa-chevron-down"></i></div>` : ''}</div></div>`;
             });
             container.innerHTML = html;
         }
-
         function toggleDetails(id, card) { const details = document.getElementById(id); if (!details) return; card.classList.toggle('expanded'); const icon = card.querySelector('.expand-icon'); if (icon) icon.style.transform = card.classList.contains('expanded') ? 'rotate(180deg)' : 'rotate(0)'; }
-        
         function renderGuide() {
             const container = document.getElementById('guide-container');
             let html = '';
             guideData.forEach((item, index) => {
-                html += `
-                    <div class="app-card p-5 border-l-4 border-l-app-primary">
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            ${item.tags.map(t => `<span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded-md">#${t}</span>`).join('')}
-                        </div>
-                        <h3 class="text-lg font-bold text-slate-800 mb-2">${item.title}</h3>
-                        <p class="text-sm text-slate-600 leading-7 font-medium text-justify">${item.content}</p>
-                    </div>`;
+                const colors = ['bg-red-50', 'bg-blue-50', 'bg-green-50', 'bg-purple-50', 'bg-yellow-50'];
+                const color = colors[index % colors.length];
+                html += `<div class="kawaii-card p-5 ${color} border-none"><div class="flex gap-2 mb-3">${item.tags.map(t => `<span class="text-[10px] font-bold bg-white/60 text-gray-500 px-2 py-1 rounded-full backdrop-blur-sm">#${t}</span>`).join('')}</div><h3 class="text-lg font-black text-gray-700 mb-2">${item.title}</h3><p class="text-sm text-gray-600 leading-relaxed font-medium">${item.content}</p></div>`;
             });
             container.innerHTML = html;
         }
-
         function appendCalc(val) { document.getElementById('calc-input').value += val; calculate(); }
         function clearCalc() { document.getElementById('calc-input').value = ""; calculate(); }
         function calculate() {
@@ -618,99 +498,46 @@
             if(input.trim() === "") { document.getElementById('calc-result-twd').innerText = "0"; document.getElementById('calc-result-jpy').innerText = "0"; return; }
             try { if (/^[0-9+\-*/().\s]+$/.test(input)) { const jpy = new Function('return ' + input)(); if (isFinite(jpy)) { document.getElementById('calc-result-jpy').innerText = Math.round(jpy); document.getElementById('calc-result-twd').innerText = Math.round(jpy * rate).toLocaleString(); } } } catch (e) {}
         }
-        
-        function handlePhotoUpload(input) { 
-            const status = document.getElementById('photo-status');
-            status.innerText = "處理中...";
-            if (input.files && input.files[0]) { 
-                const reader = new FileReader(); 
-                reader.onload = function (e) { 
-                    const img = new Image(); 
-                    img.onload = function () { 
-                        const canvas = document.createElement('canvas'); 
-                        const ctx = canvas.getContext('2d'); 
-                        const maxSize = 600; // 提高圖片品質
-                        let width = img.width; let height = img.height; 
-                        if (width > height) { if (width > maxSize) { height *= maxSize / width; width = maxSize; } } 
-                        else { if (height > maxSize) { width *= maxSize / height; height = maxSize; } } 
-                        canvas.width = width; canvas.height = height; 
-                        ctx.drawImage(img, 0, 0, width, height); 
-                        currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7); 
-                        document.getElementById('photo-preview').src = currentPhotoBase64; 
-                        document.getElementById('photo-preview-container').classList.remove('hidden'); 
-                        status.innerText = "照片已附加";
-                    }; 
-                    img.src = e.target.result; 
-                }; 
-                reader.readAsDataURL(input.files[0]); 
-            } 
-        }
-        
-        function clearPhoto() { 
-            document.getElementById('expense-photo').value = ""; 
-            document.getElementById('photo-preview-container').classList.add('hidden'); 
-            document.getElementById('photo-status').innerText = "";
-            currentPhotoBase64 = null; 
-        }
-
+        function handlePhotoUpload(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = function (e) { const img = new Image(); img.onload = function () { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); const maxSize = 300; let width = img.width; let height = img.height; if (width > height) { if (width > maxSize) { height *= maxSize / width; width = maxSize; } } else { if (height > maxSize) { width *= maxSize / height; height = maxSize; } } canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height); currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.6); document.getElementById('photo-preview').src = currentPhotoBase64; document.getElementById('photo-preview-container').classList.remove('hidden'); }; img.src = e.target.result; }; reader.readAsDataURL(input.files[0]); } }
+        function clearPhoto() { document.getElementById('expense-photo').value = ""; document.getElementById('photo-preview-container').classList.add('hidden'); currentPhotoBase64 = null; }
         function addExpense() {
             const item = document.getElementById('expense-item').value; const amountStr = document.getElementById('calc-result-jpy').innerText; const amount = parseInt(amountStr) || 0; const isAdvance = document.getElementById('expense-is-advance').checked;
-            if (!item || amount <= 0) { alert("請輸入項目和金額喔！"); return; }
+            if (!item || amount <= 0) { alert("請輸入項目和金額喔！🥺"); return; }
             expenses.unshift({ id: Date.now(), item: item, amount: amount, image: currentPhotoBase64, date: new Date().toLocaleDateString(), isAdvance: isAdvance });
-            localStorage.setItem('expenses_book_2025_v15', JSON.stringify(expenses)); renderExpenses(); updateSplitCalc();
+            localStorage.setItem('expenses_book_2025_v13', JSON.stringify(expenses)); renderExpenses(); updateSplitCalc();
             document.getElementById('expense-item').value = ""; document.getElementById('calc-input').value = ""; document.getElementById('calc-result-jpy').innerText = "0"; document.getElementById('calc-result-twd').innerText = "0"; document.getElementById('expense-is-advance').checked = false; clearPhoto();
         }
-
         function updateSplitCalc() {
             const travelerCount = parseInt(document.getElementById('traveler-count').value) || 2; localStorage.setItem('traveler_count_v11', travelerCount);
             let totalAdvance = 0; expenses.forEach(ex => { if(ex.isAdvance) totalAdvance += ex.amount; });
             const perPerson = Math.round(totalAdvance / travelerCount);
             document.getElementById('advance-total').innerText = totalAdvance.toLocaleString(); document.getElementById('split-result').innerText = perPerson.toLocaleString();
         }
-
         function renderExpenses() {
             const container = document.getElementById('expense-container'); const totalEl = document.getElementById('total-jpy'); container.innerHTML = ''; let total = 0;
             const grouped = {}; expenses.forEach((ex) => { total += ex.amount; if (!grouped[ex.date]) grouped[ex.date] = []; grouped[ex.date].push(ex); });
-            
-            if (expenses.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-300 py-10 text-sm">還沒有支出紀錄<br>按上方按鈕新增第一筆吧！</div>`;
-            }
-
             for (const [date, items] of Object.entries(grouped)) {
                 const groupDiv = document.createElement('div');
-                groupDiv.innerHTML = `<div class="sticky top-0 bg-app-bg/95 backdrop-blur z-10 py-2 mb-2 border-b border-slate-200 flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div><h4 class="font-bold text-slate-500 text-xs">${date}</h4></div>`;
+                groupDiv.innerHTML = `<div class="sticky top-0 bg-kawaii-base/95 backdrop-blur z-10 py-2 mb-2 border-b border-gray-100 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-kawaii-accent"></span><h4 class="font-black text-gray-500 text-sm">${date}</h4></div>`;
                 const listUl = document.createElement('ul'); listUl.className = "space-y-3";
                 items.forEach((ex) => {
                     const originalIndex = expenses.findIndex(e => e.id === ex.id);
-                    const li = document.createElement('li'); li.className = "app-card p-3 flex items-center gap-3";
-                    const advanceTag = ex.isAdvance ? `<span class="bg-blue-50 text-blue-600 text-[10px] px-1.5 py-0.5 rounded mr-1 font-bold">代墊</span>` : '';
-                    li.innerHTML = `
-                        <div class="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0 flex items-center justify-center border border-slate-200">
-                            ${ex.image ? `<img src="${ex.image}" class="w-full h-full object-cover">` : `<i class="fas fa-receipt text-slate-300"></i>`}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex justify-between items-baseline mb-0.5">
-                                <h4 class="text-sm font-bold text-slate-700 truncate">${advanceTag}${ex.item}</h4>
-                                <span class="font-bold text-sm text-slate-800">¥${ex.amount.toLocaleString()}</span>
-                            </div>
-                        </div>
-                        <button onclick="deleteExpense(${originalIndex})" class="w-8 h-8 rounded-full text-slate-300 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition-all"><i class="fas fa-trash-alt text-xs"></i></button>
-                    `;
+                    const li = document.createElement('li'); li.className = "bg-white p-3 rounded-2xl flex items-center gap-3 shadow-card border border-gray-50";
+                    const advanceTag = ex.isAdvance ? `<span class="bg-kawaii-secondary/20 text-kawaii-secondary text-[10px] px-1.5 py-0.5 rounded-md mr-1 font-black">[代墊]</span>` : '';
+                    li.innerHTML = `<div class="w-10 h-10 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center">${ex.image ? `<img src="${ex.image}" class="w-full h-full object-cover">` : `<i class="fas fa-shopping-basket text-gray-300"></i>`}</div><div class="flex-1 min-w-0"><div class="flex justify-between items-baseline"><h4 class="text-sm font-bold text-gray-700 truncate">${advanceTag}${ex.item}</h4><span class="font-black text-sm text-kawaii-text">¥${ex.amount.toLocaleString()}</span></div></div><button onclick="deleteExpense(${originalIndex})" class="w-8 h-8 rounded-full bg-red-50 text-red-300 hover:bg-red-100 flex items-center justify-center transition-colors"><i class="fas fa-trash-alt text-xs"></i></button>`;
                     listUl.appendChild(li);
                 });
                 groupDiv.appendChild(listUl); container.appendChild(groupDiv);
             }
             totalEl.innerText = total.toLocaleString(); updateSplitCalc();
         }
-
-        function deleteExpense(index) { if (confirm("要刪除這筆紀錄嗎？")) { expenses.splice(index, 1); localStorage.setItem('expenses_book_2025_v15', JSON.stringify(expenses)); renderExpenses(); } }
-        function clearExpenses() { if (confirm("確定要清空所有紀錄嗎？")) { expenses = []; localStorage.setItem('expenses_book_2025_v15', JSON.stringify(expenses)); renderExpenses(); } }
-
+        function deleteExpense(index) { if (confirm("要刪除這筆紀錄嗎？")) { expenses.splice(index, 1); localStorage.setItem('expenses_book_2025_v13', JSON.stringify(expenses)); renderExpenses(); } }
+        function clearExpenses() { if (confirm("確定要清空所有紀錄嗎？")) { expenses = []; localStorage.setItem('expenses_book_2025_v13', JSON.stringify(expenses)); renderExpenses(); } }
         function renderTodoList() {
             const container = document.getElementById('checklist-container'); container.innerHTML = '';
             todoList.forEach((todo, index) => {
-                const div = document.createElement('div'); div.className = "flex items-center gap-3 p-2.5 hover:bg-slate-50 rounded-lg transition-colors group border-b border-slate-50 last:border-0";
-                div.innerHTML = `<div class="relative flex items-center justify-center w-5 h-5"><input type="checkbox" class="peer appearance-none w-5 h-5 border-2 border-slate-300 rounded-md checked:bg-emerald-500 checked:border-emerald-500 transition-colors cursor-pointer" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${index})"><i class="fas fa-check text-white text-xs absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity"></i></div><span class="text-sm font-bold text-slate-600 flex-1 ${todo.done ? 'line-through text-slate-300' : ''}">${todo.text}</span><button onclick="removeTodo(${index})" class="text-slate-200 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-times"></i></button>`;
+                const div = document.createElement('div'); div.className = "flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors group";
+                div.innerHTML = `<div class="relative flex items-center justify-center w-5 h-5"><input type="checkbox" class="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-md checked:bg-kawaii-green checked:border-kawaii-green transition-colors cursor-pointer" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${index})"><i class="fas fa-check text-white text-xs absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity"></i></div><span class="text-sm font-bold text-gray-600 flex-1 ${todo.done ? 'line-through text-gray-300' : ''}">${todo.text}</span><button onclick="removeTodo(${index})" class="text-gray-200 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-times"></i></button>`;
                 container.appendChild(div);
             });
         }
@@ -726,27 +553,34 @@
             const btn = document.getElementById('btn-upload');
             const myId = getDeviceId();
             
-            if (!navigator.onLine) { alert("目前沒有網路，無法備份喔！"); return; }
+            if (!navigator.onLine) { alert("目前沒有網路，無法備份喔！☔"); return; }
             if(expenses.length === 0 && !confirm("目前的紀錄是空的，確定要覆蓋雲端資料嗎？")) return;
 
             try {
-                status.innerText = "上傳中...";
-                btn.disabled = true; btn.classList.add('opacity-50');
+                status.innerText = "正在上傳資料到雲端... ☁️";
+                btn.disabled = true;
+                btn.classList.add('opacity-50');
 
                 const response = await fetch(GAS_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({ deviceId: myId, expenses: expenses })
+                    body: JSON.stringify({ 
+                        deviceId: myId, 
+                        expenses: expenses 
+                    })
                 });
                 
-                status.innerText = "✅ 請求已發送";
+                status.innerText = "✅ 備份請求已發送 (請稍後檢查)";
                 setTimeout(() => status.innerText = "", 3000);
 
             } catch (error) {
-                console.error(error); status.innerText = "❌ 失敗"; alert("上傳失敗，請檢查網路。");
+                console.error(error);
+                status.innerText = "❌ 上傳失敗";
+                alert("上傳失敗，請檢查網路連線。");
             } finally {
-                btn.disabled = false; btn.classList.remove('opacity-50');
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
             }
         }
 
@@ -756,35 +590,39 @@
             const myId = getDeviceId();
 
             if (!navigator.onLine) { alert("沒有網路無法下載喔！"); return; }
-            if (!confirm("確定要從雲端還原嗎？\n這將會覆蓋掉目前手機上的紀錄！")) return;
+            if (!confirm("確定要從雲端還原嗎？\n⚠️ 這將會覆蓋掉目前手機上的紀錄！")) return;
 
             try {
-                status.innerText = "下載中...";
-                btn.disabled = true; btn.classList.add('opacity-50');
+                status.innerText = "正在下載雲端資料... 📥";
+                btn.disabled = true;
+                btn.classList.add('opacity-50');
 
                 const response = await fetch(`${GAS_URL}?deviceId=${myId}`);
                 const data = await response.json();
 
                 if (Array.isArray(data)) {
                     expenses = data;
-                    localStorage.setItem('expenses_book_2025_v15', JSON.stringify(expenses));
+                    localStorage.setItem('expenses_book_2025_v13', JSON.stringify(expenses));
                     renderExpenses();
                     updateSplitCalc();
-                    status.innerText = "✅ 成功";
+                    status.innerText = "✅ 還原成功！";
                 } else {
-                    throw new Error("Format Error");
+                    throw new Error("Data format error");
                 }
                 setTimeout(() => status.innerText = "", 3000);
 
             } catch (error) {
-                console.error(error); status.innerText = "❌ 失敗"; alert("讀取失敗，雲端可能還沒有您的資料。");
+                console.error(error);
+                status.innerText = "❌ 下載失敗";
+                alert("讀取失敗，可能是雲端還沒有您的備份資料喔！");
             } finally {
-                btn.disabled = false; btn.classList.remove('opacity-50');
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
             }
         }
 
         window.addEventListener('online', () => {
-            document.getElementById('sync-status').innerText = "連線恢復";
+            document.getElementById('sync-status').innerText = "網路已連線 📶";
             setTimeout(() => document.getElementById('sync-status').innerText = "", 2000);
         });
     </script>
