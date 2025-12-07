@@ -764,6 +764,7 @@
                 // 修正：使用 text/plain 避免 preflight 檢查
                 const response = await fetch(GAS_URL, {
                     method: 'POST',
+					mode: 'no-cors', // 強制略過 CORS 檢查
                     headers: {
                         "Content-Type": "text/plain;charset=utf-8",
                     },
