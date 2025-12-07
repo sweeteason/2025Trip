@@ -762,10 +762,13 @@ async function syncToCloud() {
 
         // 使用 no-cors 模式或是標準 POST
         // 為了簡單起見，我們傳送純文字字串避免跨域複雜問題
-        const response = await fetch(GAS_URL, {
-            method: 'POST',
-            body: JSON.stringify({ expenses: expenses })
-        });
+		const response = await fetch(GAS_URL, {
+			method: 'POST',
+			headers: {
+				"Content-Type": "text/plain;charset=utf-8", // 關鍵：告訴瀏覽器這是純文字，不要做安全檢查
+			},
+			body: JSON.stringify({ expenses: expenses })
+		});
         
         // 備註：GAS 跨域 POST 請求在瀏覽器端可能會報錯或是 opaque response
         // 但實際上資料通常會寫入成功。為了更穩定的 UX，我們假設沒報錯就是成功
