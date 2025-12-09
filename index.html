@@ -230,17 +230,17 @@
                 </div>
 
                 <div class="flex gap-2 mb-2">
-                    <button onclick="syncToCloud()" id="btn-upload" class="flex-1 bg-blue-400 text-white py-2 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
+                    <button onclick="syncToCloud('btn-upload-wallet', 'sync-status-wallet')" id="btn-upload-wallet" class="flex-1 bg-blue-400 text-white py-2 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
                         <i class="fas fa-cloud-upload-alt"></i> 備份到雲端
                     </button>
-                    <button onclick="syncFromCloud()" id="btn-download" class="flex-1 bg-gray-400 text-white py-2 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
+                    <button onclick="syncFromCloud('btn-download-wallet', 'sync-status-wallet')" id="btn-download-wallet" class="flex-1 bg-gray-400 text-white py-2 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
                         <i class="fas fa-cloud-download-alt"></i> 從雲端還原
                     </button>
                 </div>
                 <div class="text-[10px] text-center text-gray-300 mb-2 font-mono">
-                    Device ID: <span id="my-device-id">loading...</span>
+                    Device ID: <span class="device-id-display">loading...</span>
                 </div>
-                <div id="sync-status" class="text-[10px] text-center text-gray-400 mb-4 h-4 font-bold transition-all"></div>
+                <div id="sync-status-wallet" class="text-[10px] text-center text-gray-400 mb-4 h-4 font-bold transition-all"></div>
 
                 <div id="expense-container" class="space-y-6 pb-8"></div>
                 <button onclick="clearExpenses()" class="w-full text-center text-xs text-gray-300 mt-2 hover:text-red-300 transition-colors">🗑️ 清空所有紀錄</button>
@@ -257,10 +257,26 @@
                     <button onclick="addTodo()" class="bg-kawaii-green text-white w-10 h-10 rounded-full shadow-md hover:shadow-lg active:scale-90 transition-all flex items-center justify-center"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
+            
             <div class="bg-[#FFFDF0] rounded-[32px] p-6 shadow-card relative border-2 border-[#FEF9E7]">
                 <div class="absolute -top-3 -right-2 text-2xl rotate-12">📝</div>
                 <h3 class="text-lg font-black mb-2 text-[#C9B36B]">隨手記 (同步備份)</h3>
                 <textarea id="memo-area" class="w-full h-40 bg-transparent p-2 text-sm leading-8 outline-none resize-none font-bold text-[#8D7F57] placeholder-[#D8CFB4]" style="background-image: repeating-linear-gradient(transparent, transparent 31px, #EBE3CC 31px, #EBE3CC 32px); line-height: 32px;" placeholder="這裡寫的東西，按「備份到雲端」也會一起存喔！"></textarea>
+                
+                <div class="mt-6 border-t border-dashed border-[#EBE3CC] pt-4">
+                    <div class="flex gap-2 mb-2">
+                        <button onclick="syncToCloud('btn-upload-memo', 'sync-status-memo')" id="btn-upload-memo" class="flex-1 bg-blue-400 text-white py-2 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
+                            <i class="fas fa-cloud-upload-alt"></i> 備份到雲端
+                        </button>
+                        <button onclick="syncFromCloud('btn-download-memo', 'sync-status-memo')" id="btn-download-memo" class="flex-1 bg-gray-400 text-white py-2 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
+                            <i class="fas fa-cloud-download-alt"></i> 從雲端還原
+                        </button>
+                    </div>
+                    <div class="text-[10px] text-center text-[#D8CFB4] mb-2 font-mono">
+                        Device ID: <span class="device-id-display">loading...</span>
+                    </div>
+                    <div id="sync-status-memo" class="text-[10px] text-center text-gray-400 mb-1 h-4 font-bold transition-all"></div>
+                </div>
             </div>
         </div>
 
@@ -490,7 +506,11 @@
             renderTodoList();
             renderPhrases(); // Render translation cards
             
-            document.getElementById('my-device-id').innerText = getDeviceId();
+            const deviceId = getDeviceId();
+            // 更新所有 class 為 device-id-display 的元素
+            document.querySelectorAll('.device-id-display').forEach(el => {
+                el.innerText = deviceId;
+            });
 
             const savedCount = localStorage.getItem('traveler_count_v11');
             if (savedCount) document.getElementById('traveler-count').value = savedCount;
@@ -665,17 +685,22 @@
 
         const GAS_URL = "https://script.google.com/macros/s/AKfycbynC94_BpKWXOL9379FVXkTwfx147C7f6p6XdJcLYDZJhxAUlNqKzum7Zr8q7BA-Dag/exec";
 
-        async function syncToCloud() {
-            const status = document.getElementById('sync-status');
-            const btn = document.getElementById('btn-upload');
+        // 更新後的上傳函式 (支援多按鈕 ID)
+        async function syncToCloud(btnId, statusId) {
+            // 如果沒有傳入參數，就使用預設值 (相容舊版邏輯)
+            if (!btnId) btnId = 'btn-upload-wallet';
+            if (!statusId) statusId = 'sync-status-wallet';
+
+            const status = document.getElementById(statusId);
+            const btn = document.getElementById(btnId);
             const myId = getDeviceId();
-            const memoContent = document.getElementById('memo-area').value; // 抓取隨手記內容
+            const memoContent = document.getElementById('memo-area').value; 
             
             if (!navigator.onLine) { alert("目前沒有網路，無法備份喔！☔"); return; }
             if(expenses.length === 0 && !memoContent && !confirm("目前的紀錄是空的，確定要覆蓋雲端資料嗎？")) return;
 
             try {
-                status.innerText = "正在上傳資料到雲端... ☁️";
+                status.innerText = "正在上傳... ☁️";
                 btn.disabled = true;
                 btn.classList.add('opacity-50');
 
@@ -686,11 +711,11 @@
                     body: JSON.stringify({ 
                         deviceId: myId, 
                         expenses: expenses,
-                        memo: memoContent // 新增：一起傳送隨手記
+                        memo: memoContent
                     })
                 });
                 
-                status.innerText = "✅ 備份請求已發送 (請稍後檢查)";
+                status.innerText = "✅ 備份請求已發送";
                 setTimeout(() => status.innerText = "", 3000);
 
             } catch (error) {
@@ -703,23 +728,26 @@
             }
         }
 
-        async function syncFromCloud() {
-            const status = document.getElementById('sync-status');
-            const btn = document.getElementById('btn-download');
+        // 更新後的下載函式 (支援多按鈕 ID)
+        async function syncFromCloud(btnId, statusId) {
+            if (!btnId) btnId = 'btn-download-wallet';
+            if (!statusId) statusId = 'sync-status-wallet';
+
+            const status = document.getElementById(statusId);
+            const btn = document.getElementById(btnId);
             const myId = getDeviceId();
 
             if (!navigator.onLine) { alert("沒有網路無法下載喔！"); return; }
             if (!confirm("確定要從雲端還原嗎？\n⚠️ 這將會覆蓋掉目前手機上的紀錄！")) return;
 
             try {
-                status.innerText = "正在下載雲端資料... 📥";
+                status.innerText = "下載中... 📥";
                 btn.disabled = true;
                 btn.classList.add('opacity-50');
 
                 const response = await fetch(`${GAS_URL}?deviceId=${myId}`);
                 const data = await response.json();
 
-                // 處理回傳資料 (包含 expenses 和 memo)
                 if (data.expenses) {
                     expenses = data.expenses;
                     localStorage.setItem('expenses_book_2025_v17', JSON.stringify(expenses));
@@ -746,8 +774,13 @@
         }
 
         window.addEventListener('online', () => {
-            document.getElementById('sync-status').innerText = "網路已連線 📶";
-            setTimeout(() => document.getElementById('sync-status').innerText = "", 2000);
+            // 當網路恢復時，更新兩個分頁的狀態文字
+            document.getElementById('sync-status-wallet').innerText = "網路已連線 📶";
+            document.getElementById('sync-status-memo').innerText = "網路已連線 📶";
+            setTimeout(() => {
+                document.getElementById('sync-status-wallet').innerText = "";
+                document.getElementById('sync-status-memo').innerText = "";
+            }, 2000);
         });
     </script>
 </body>
