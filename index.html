@@ -72,7 +72,7 @@
 
     <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-white/50 shadow-sm transition-all duration-300">
         <div class="px-3 py-3 flex justify-between items-center max-w-2xl mx-auto gap-2">
-            <div class="flex items-center gap-2 overflow-hidden">
+            <div class="flex items-center gap-2 overflow-hidden flex-1">
                 <div class="w-10 h-10 flex-shrink-0 bg-gradient-to-tr from-kawaii-secondary to-blue-50 rounded-2xl flex items-center justify-center shadow-inner text-xl relative overflow-hidden group">
                     <span class="group-hover:animate-bounce-slow inline-block">⛄</span>
                     <div class="absolute inset-0 bg-white/20 rounded-2xl"></div>
@@ -83,9 +83,17 @@
                     </h1>
                 </div>
             </div>
-            <a href="https://docs.google.com/document/d/1WI3KNDMLUYx4P_X6-Oxj5lBcrVkfZfUeL3ah2RJeojE/edit?usp=sharing" target="_blank" class="flex-shrink-0 flex items-center gap-1.5 bg-kawaii-primary text-white pl-3 pr-4 py-2 rounded-full font-bold text-xs shadow-md shadow-pink-200 hover:shadow-glow hover:scale-105 active:scale-95 transition-all">
-                <i class="fas fa-file-alt"></i> <span>看完整行程</span>
-            </a>
+            
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <button onclick="switchTab('translate', null)" class="flex-shrink-0 flex items-center justify-center w-9 h-9 bg-blue-50 text-blue-500 rounded-full font-bold shadow-md hover:bg-blue-100 hover:scale-105 active:scale-95 transition-all" aria-label="翻譯">
+                    <i class="fas fa-language text-base"></i>
+                </button>
+
+                <a href="https://docs.google.com/document/d/1WI3KNDMLUYx4P_X6-Oxj5lBcrVkfZfUeL3ah2RJeojE/edit?usp=sharing" target="_blank" class="flex-shrink-0 flex items-center gap-1.5 bg-kawaii-primary text-white pl-3 pr-4 py-2 rounded-full font-bold text-xs shadow-md shadow-pink-200 hover:shadow-glow hover:scale-105 active:scale-95 transition-all">
+                    <i class="fas fa-file-alt"></i>
+                    <span>看完整行程</span>
+                </a>
+            </div>
         </div>
     </header>
 
@@ -341,10 +349,6 @@
                 <div class="icon-container w-12 h-12 rounded-[20px] flex items-center justify-center mb-1 transition-all duration-300 bg-transparent text-gray-400 -mt-4 group-[.active]:-mt-6"><i class="fas fa-wallet text-xl"></i></div>
                 <span class="text-[9px] font-bold text-gray-400 group-[.active]:text-kawaii-primary transition-colors">錢包</span>
             </button>
-            <button class="nav-item flex-1 h-full pb-2 flex flex-col items-center justify-end transition-all duration-300 group" onclick="switchTab('translate', this)">
-                <div class="icon-container w-10 h-10 rounded-2xl flex items-center justify-center mb-1 transition-all duration-300 bg-transparent text-gray-400"><i class="fas fa-language text-lg"></i></div>
-                <span class="text-[9px] font-bold text-gray-400 group-[.active]:text-kawaii-primary transition-colors">翻譯</span>
-            </button>
             <button class="nav-item flex-1 h-full pb-2 flex flex-col items-center justify-end transition-all duration-300 group" onclick="switchTab('lists', this)">
                 <div class="icon-container w-10 h-10 rounded-2xl flex items-center justify-center mb-1 transition-all duration-300 bg-transparent text-gray-400"><i class="fas fa-tasks text-lg"></i></div>
                 <span class="text-[9px] font-bold text-gray-400 group-[.active]:text-kawaii-primary transition-colors">清單</span>
@@ -535,7 +539,9 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
+            if (btn && btn.classList.contains('nav-item')) {
+                btn.classList.add('active');
+            }
             window.scrollTo(0, 0);
         }
 
